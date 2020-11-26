@@ -10,7 +10,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 class DemoFixtures extends Fixture
-{
+{    
     public function load(ObjectManager $manager)
     {
         //create categories
@@ -71,14 +71,10 @@ class DemoFixtures extends Fixture
 
         $trick = new Trick();
         
-        /*$categoryGrab = new Category;
-        $categoryGrab = $categoryRepository->findByTitle('grabs');
-        */
-
-        $categoryGrab = new Category();
-        $categoryGrab->setTitle('test');
-        $manager->persist($categoryGrab);
-
+        /** @var CategoryRepository */
+        $categoryRepository = $manager->getRepository(Category::class);
+        $categoryGrab = $categoryRepository->findOneByTitle('grabs');
+    
         $date = new \DateTime();
         
         foreach ($tricksData as $trickData){           

@@ -22,7 +22,7 @@ class CategoryRepository extends ServiceEntityRepository
     public function findOneByTitle($value): ?Category
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('title = :val')
+            ->andWhere('c.title = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()
