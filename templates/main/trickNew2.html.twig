@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Tricks
+{% endblock %}
+{% block metaName %}SnowTricks Ajout d'un Trick
+{% endblock %}
+{% block metaContent %}Nouveau Trick
+{% endblock %}
+
+{% block body %}
+{# la page n'est accessible que si l'utlisateur est connecté #} 
+    <div class="container w-75 my-5 px-auto border">
+        <h1>Formulaire Création Trick</h1> 
+        <p>Nom <p> {# contrôle unicité #}
+        <p>description</p>
+        <p>liste déroulate catégorie</p>
+        <p>upload image</p>
+        <p>upload vidéo</p>
+
+        <button type="submit">Enregistrer</button> {# Erreur si l'utlisateur n'est pas connecté #} 
+        {# soit redirigé sur la page du formulaire en cas d'erreur, en précisant le(s) type(s) d'erreurs ;
+        soit redirigé sur la page listant des figures avec un message flash donnant une indication concernant le bon déroulement de l'enregistrement en base de données en cas de succès.
+        #}
+    </div>
+
+{% endblock %}

@@ -1,20 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!{% endblock %}
+{% block title %}Accueil
+{% endblock %}
+{% block metaName %}Accueil
+{% endblock %}
+{% block metaContent %}Accueil SnowTricks
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {# Afficher une image d'accueil  en arrière plan + phrase d'accroche #}
+    <div class="container my-5 px-auto border">
+        <p>image accueil + phrase accroche</p>
+        <p>au chargement de la page, seule l'image s'affichera. Un bouton en bas à droite permettra de descendre l'affichage jusqu'au block de tricks</p>
+        <img src="https://placehold.it/860x400">
+        <div class="row justify-content-end">
+            <button >Boutton Affiche le block des tricks</button>
+        </div>
+    </div>
+    
+    {# au chargement de la page, seule l'image s'affichera. Un bouton en bas à droite permettra de descendre l'affichage jusqu'au block de tricks #}
+    
+    <div class="container my-5 px-auto border">
+        BLOC de TRICKS : 15 premières vignettes + load more
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="https://placehold.it/250x100" alt="">
+            <div class="card-body">
+            <h5 class="card-title">Titre Trick</h5>
+             <a href=trick/1.html class="btn btn-primary">VoirTrick1</a> {# le lien s'écrira avec un path{} et vers trick/ {id} #}
+             <a href=trick/edit/1.html class="btn btn-success">EditTrick1</a> {# Ce bouton n'apparaitra que si l'utilisateur est connecté #}
+        </div>
+    </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/Julie Xaxa/Dev/OpenClassroom_P06/src/Controller/MainController.php'|file_link(0) }}">src/Controller/MainController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/Julie Xaxa/Dev/OpenClassroom_P06/templates/main/index.html.twig'|file_link(0) }}">templates/main/index.html.twig</a></code></li>
-    </ul>
-</div>
+
+    {# Ce bouton permettra de remonter en haut du bloc de tricks lorsque plus de 15 tricks seront chargés #}
+    <div class="row justify-content-end">
+        <button >Boutton UP</button>
+    </div>
+
+
 {% endblock %}

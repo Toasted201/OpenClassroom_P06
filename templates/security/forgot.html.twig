@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mot de passe oublié
+{% endblock %}
+{% block metaName %}SnowTricks ForgotPass
+{% endblock %}
+{% block metaContent %}Forgot Password
+{% endblock %}
+
+{% block body %}
+
+    <div class="container w-75 my-5 px-auto border">
+        <h1>Formulaire mot de passe oublié</h1>
+        <p>Username = </p>
+
+        <button type="submit">Demander un nouveau Password</button>
+    </div>    
+        {# Une fois le formulaire soumis, un email contenant un token de reste sera envoyé à l'utilisateur. 
+Ce dernier le redirigera via un lien sur la page Reset Password #}
+
+
+{% endblock %}

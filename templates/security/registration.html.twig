@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un compte
+{% endblock %}
+{% block metaName %}SnowTricks registration
+{% endblock %}
+{% block metaContent %}Créer un compte
+{% endblock %}
+
+{% block body %}
+
+    <div class="container w-75 my-5 px-auto border">
+        <h1> Formulaire de création de compte </h1>
+        <p> UserName = </p>
+        <p> Email = </p>
+        <p> Password = </p>
+
+        <button type="submit">Créer un compte</button>
+        <a href="{{ path('connexion') }} "><button>Déjà Inscrit</button></a> 
+
+        {# Vous veillerez à envoyer un email permettant de valider la création de compte et rendre le compte actif (via un token de validation par exemple).
+        {# Il faut pouvoir associer un photo de profil #}
+        {# Une fois le formulaire soumis, l'utilisateur sera redirigé vers l'accueil sans être connecté #}
+    </div>
+
+{% endblock %}
