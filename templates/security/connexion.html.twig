@@ -15,7 +15,8 @@
         <p>Password =</p> 
 
         <button type="submit">Se connecter</button> {# Une fois connecté, l'utilisateur sera redirigé vers l'accueil #}
-        <a href="{{ path('forgot_pass') }} "><button>Mot de passe oublié ?</button></a> 
+        <a href="{{ path('forgot_pass') }} "><button>Mot de passe oublié ?</button></a>
+        <a href="{{ path('app_register') }} "><button>Pas encore de compte ? Inscrivez-vous</button></a> 
     </div>
 
 {% endblock %}

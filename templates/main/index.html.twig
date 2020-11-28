@@ -8,6 +8,14 @@
 {% endblock %}
 
 {% block body %}
+    
+    {% for flashSuccess in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ flashSuccess }}</div>
+    {% endfor %}
+    
+    {% for flashError in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
 
     {# Afficher une image d'accueil  en arrière plan + phrase d'accroche #}
     <div class="container my-5 px-auto border">
@@ -31,7 +39,6 @@
              <a href=trick/edit/1.html class="btn btn-success">EditTrick1</a> {# Ce bouton n'apparaitra que si l'utilisateur est connecté #}
         </div>
     </div>
-
 
     {# Ce bouton permettra de remonter en haut du bloc de tricks lorsque plus de 15 tricks seront chargés #}
     <div class="row justify-content-end">

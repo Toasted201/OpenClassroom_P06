@@ -25,7 +25,7 @@ class Category
     private $title;
 
     /**
-     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="categoryId")
+     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="category")
      */
     private $tricks;
 
