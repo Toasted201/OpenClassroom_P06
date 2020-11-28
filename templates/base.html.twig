@@ -29,8 +29,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Ajout Trick</a>
                     </li>
+                    {% if app.user %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path ('connexion') }}">Connexion</a> {# Faire apparaitre 'Déconnexion' si l'utilisateur est connecté #}
+                        <a class="nav-link" href="{{ path ('app_logout') }}">Se Déconnecter({{ app.user.username }})</a>
+                    </li>
+                        {% else %}
+                    <li>    
+                        <a class="nav-link" href="{{ path ('login') }}">Connexion</a> {# Faire apparaitre 'Déconnexion' si l'utilisateur est connecté #}
+                        {% endif %}
                     </li>
                 </ul>
             </div>

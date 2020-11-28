@@ -20,16 +20,6 @@ class SecurityController extends AbstractController
     }
     
     /**
-     * @Route("/connexion", name="connexion")
-     */
-    public function connexion(): Response
-    {
-        return $this->render('security/connexion.html.twig', [
-            'controller_name' => 'SecurityController',
-        ]);
-    }
-
-    /**
      * @Route("/forgot", name="forgot_pass")
      */
     public function forgotPass(): Response
@@ -50,7 +40,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="app_login")
+     * @Route("/login", name="login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {

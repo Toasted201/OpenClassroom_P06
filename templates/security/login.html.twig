@@ -1,8 +1,15 @@
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Se Connecter
+{% endblock %}
+{% block metaName %}SnowTricks Connexion
+{% endblock %}
+{% block metaContent %}Connexion
+{% endblock %}
 
 {% block body %}
+<div class="container w-75 my-5 px-auto border">
 <form method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -10,14 +17,14 @@
 
     {% if app.user %}
         <div class="mb-3">
-            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+            Vous êtes connecté en tant que {{ app.user.username }}. <a href="{{ path('app_logout') }}">Déconnectez vous</a>
         </div>
     {% endif %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputName">Name</label>
-    <input type="text" value="{{ last_username }}" name="name" id="inputName" class="form-control" required autofocus>
-    <label for="inputPassword">Password</label>
+    <h1 class="h3 mb-3 font-weight-normal">Connectez vous</h1>
+    <label for="inputName">Pseudo</label>
+    <input type="text" value="{{ last_username }}" name="username" id="inputName" class="form-control" required autofocus>
+    <label for="inputPassword">Mot de passe</label>
     <input type="password" name="password" id="inputPassword" class="form-control" required>
 
     <input type="hidden" name="_csrf_token"
@@ -37,6 +44,13 @@
 
     <button class="btn btn-lg btn-primary" type="submit">
         Sign in
-    </button>
+    </button> {# Une fois connecté, l'utilisateur sera redirigé vers l'accueil #}
 </form>
+        <a href="{{ path('forgot_pass') }} "><button>Mot de passe oublié ?</button></a>
+        <a href="{{ path('app_register') }} "><button>Pas encore de compte ? Inscrivez-vous</button></a> 
+</div>        
+
 {% endblock %}
+
+
+

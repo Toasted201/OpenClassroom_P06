@@ -24,7 +24,7 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app_login';
+    public const LOGIN_ROUTE = 'login';
 
     private $entityManager;
     private $urlGenerator;
@@ -48,13 +48,13 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
     public function getCredentials(Request $request)
     {
         $credentials = [
-            'name' => $request->request->get('name'),
+            'username' => $request->request->get('username'),
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $request->getSession()->set(
             Security::LAST_USERNAME,
-            $credentials['name']
+            $credentials['username']
         );
 
         return $credentials;
@@ -67,11 +67,16 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['name' => $credentials['name']]);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Name could not be found.');
+            throw new CustomUserMessageAuthenticationException('Le pseudo n\'existe pas');
+        }
+
+        if (!$user->isVerified()) {
+            // fail authentication with a custom error
+            throw new CustomUserMessageAuthenticationException('Votre email n\'est pas validé');
         }
 
         return $user;
