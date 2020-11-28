@@ -28,7 +28,8 @@ class DemoFixtures extends Fixture
         $userTest->setName('BobDoe')
         ->setEmail('bob@doe.com')
         ->setPassword('pass')
-        ->setRoles(['ROLE_USER'])
+        ->setRoles([])
+        ->setIsVerified('1')
         ->setCreatedAt(new \DateTime());
         $manager->persist($userTest);
 

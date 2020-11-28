@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+{% form_theme registrationForm 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}S'inscrire
+{% endblock %}
+{% block metaName %}SnowTricks registration
+{% endblock %}
+{% block metaContent %}S'inscrire
+{% endblock %}
+     
+{# Vous veillerez à envoyer un email permettant de valider la création de compte et rendre le compte actif (via un token de validation par exemple).
+{# Il faut pouvoir associer un photo de profil #}
+{# Une fois le formulaire soumis, l'utilisateur sera redirigé vers l'accueil sans être connecté #}
+
+{% block body %}
+    {% for flashError in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
+    <div class="container my-5 py-3 border">
+    
+    <h1>Inscrivez-vous</h1>
+    <a href="{{ path('connexion') }} "><button class="btn-info">Déjà Inscrit? Connectez-vous</button></a>
+
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.name, {
+            label: 'Votre pseudo'
+        })  }}
+        {{ form_row(registrationForm.email, {
+            label: 'Votre email'
+        })  }}
+        {{ form_row(registrationForm.plainPassword) }}
+
+        <button type="submit" class="btn-primary">S'inscrire</button>
+
+    {{ form_end(registrationForm) }}
+
+    
+
+    </div>
+{% endblock %}
