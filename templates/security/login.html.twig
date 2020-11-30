@@ -9,7 +9,9 @@
 {% endblock %}
 
 {% block body %}
-<div class="container w-75 my-5 px-auto border">
+<div class="container w-75 my-5 py-3 border">
+    <h1 class="h3 mb-3 font-weight-normal">Connectez vous</h1>
+    <a href="{{ path('app_register') }} "><button class="btn btn-success">Pas encore de compte ? Inscrivez-vous</button></a> 
 <form method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -21,7 +23,7 @@
         </div>
     {% endif %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Connectez vous</h1>
+
     <label for="inputName">Pseudo</label>
     <input type="text" value="{{ last_username }}" name="username" id="inputName" class="form-control" required autofocus>
     <label for="inputPassword">Mot de passe</label>
@@ -44,10 +46,10 @@
 
     <button class="btn btn-lg btn-primary" type="submit">
         Sign in
-    </button> {# Une fois connecté, l'utilisateur sera redirigé vers l'accueil #}
+    </button>
 </form>
-        <a href="{{ path('forgot_pass') }} "><button>Mot de passe oublié ?</button></a>
-        <a href="{{ path('app_register') }} "><button>Pas encore de compte ? Inscrivez-vous</button></a> 
+    <a href="{{ path('app_forgot_password_request') }} "><button class="btn btn-info">Mot de passe oublié ?</button></a>
+
 </div>        
 
 {% endblock %}
