@@ -25,7 +25,7 @@ class DemoFixtures extends Fixture
 
         
         $userTest = new User();
-        $userTest->setName('BobDoe')
+        $userTest->setUsername('BobDoe')
         ->setEmail('bob@doe.com')
         ->setPassword('pass')
         ->setRoles([])

@@ -20,10 +20,10 @@
     <div class="container my-5 py-3 border">
     
     <h1>Inscrivez-vous</h1>
-    <a href="{{ path('connexion') }} "><button class="btn-info">Déjà Inscrit? Connectez-vous</button></a>
+    <a href="{{ path('login') }} "><button class="btn-info">Déjà Inscrit? Connectez-vous</button></a>
 
     {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.name, {
+        {{ form_row(registrationForm.username, {
             label: 'Votre pseudo'
         })  }}
         {{ form_row(registrationForm.email, {

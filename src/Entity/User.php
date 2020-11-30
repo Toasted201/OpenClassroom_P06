@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"name"}, message="Un compte existe déjà avec ce pseudo")
+ * @UniqueEntity(fields={"username"}, message="Un compte existe déjà avec ce pseudo")
  */
 class User implements UserInterface
 {
@@ -25,7 +25,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $name;
+    private $username;
 
     /**
      * @ORM\Column(type="json")
@@ -79,18 +79,6 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
     /**
      * A visual identifier that represents this user.
      *
@@ -98,7 +86,14 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->name;
+        return (string) $this->username;
+    }
+
+    public function setUsername($username) : self
+    {
+        $this->username = $username;
+
+        return $this;
     }
 
     /**
