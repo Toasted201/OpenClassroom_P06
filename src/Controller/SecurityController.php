@@ -20,26 +20,6 @@ class SecurityController extends AbstractController
     }
     
     /**
-     * @Route("/forgot", name="forgot_pass")
-     */
-    public function forgotPass(): Response
-    {
-        return $this->render('security/forgot.html.twig', [
-            'controller_name' => 'SecurityController',
-        ]);
-    }
-
-    /**
-     * @Route("/reset", name="reset_pass")
-     */
-    public function resetPass(): Response
-    {
-        return $this->render('security/reset.html.twig', [
-            'controller_name' => 'SecurityController',
-        ]);
-    }
-
-    /**
      * @Route("/login", name="login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response

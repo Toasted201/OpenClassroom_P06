@@ -61,12 +61,12 @@ class RegistrationController extends AbstractController
             // do anything else you need here, like send an email
             $this->addFlash('success','Un email de validation vous a été envoyé');
 
-            /*return $guardHandler->authenticateUserAndHandleSuccess(
+            return $guardHandler->authenticateUserAndHandleSuccess(
                 $user,
                 $request,
                 $authenticator,
                 'main' // firewall name in security.yaml
-            );*/
+            );
 
             return $this->redirectToRoute('home');
         }
@@ -81,7 +81,7 @@ class RegistrationController extends AbstractController
      */
     public function verifyUserEmail(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+       $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
