@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification {{ trick.title |capitalize }}
+{% endblock %}
+{% block metaName %}SnowTricks {{ trick.title }}
+{% endblock %}
+{% block metaContent %}Modification {{ trick.title |capitalize }}
+{% endblock %}
+
+{% block body %}
+{# TODO Doublon avec page show ?? #}
+{# TODO La page ne doit être accessible que si l'utlisateur est connecté #}
+
+
+{# TODO Mettre une image de fond sur toute la largeur de la page #}
+
+{# TODO Mettre l'image à la une = principale ou image par défaut #}
+<div class="container my-5 px-auto border">
+<h1>Modification de la  fiche {{ trick.title }}</h1>
+    <div class="container my-5 px-auto border">
+        <i style="color:orange">Image Principal + TitreTrick </i><img src="https://placehold.it/860x400">
+    </div>
+    {# TODO y ajouter un bouton modifier/supprimer si connecté #}
+  
+{# Afficher carrousel avec les photos et les vidéos à la suite - Responsive
+il sera caché sur mobile avec un bouton qui affichera les médias (modale??) #}
+{# chaque image/vidéo pourra être modifiée de manière individuelle #}
+
+    <div class="container my-5 px-auto border">
+        <i style="color:orange">chaque image/vidéo pourra être modifiée de manière individuelle
+        Sur mobile, le carrousel sera caché. Un bouton affichera les médias pour modfi/suppression</i>
+        <img src="https://placehold.it/120x60">
+        <img src="https://placehold.it/120x60">
+        <img src="https://placehold.it/120x60">
+        <img src="https://placehold.it/120x60">
+        <img src="https://placehold.it/120x60">
+        <img src="https://placehold.it/120x60">
+        <img src="https://placehold.it/120x60">
+    </div>
+</div>
+
+ <p>Dans la catégorie {# TODO Afficher une liste déroulante avec les catégories avec celle de la figure par défaut #}</p>
+    {{ include('trick/_form.html.twig', {'button_label': 'Update'}) }} {# TODO Seul un utilisateur connecté peut update #}
+
+     {{ include('trick/_delete_form.html.twig') }} {# TODO le delete n'est affiché que si l'utilisateur est connecté #}
+
+    <a href="{{ path('trick_index') }}"><button class="btn-info">Retour à la liste</button></a>
+
+
+{% endblock %}

@@ -19,31 +19,32 @@
 
     {# Afficher une image d'accueil  en arrière plan + phrase d'accroche #}
     <div class="container my-5 px-auto border">
-        <p>image accueil + phrase accroche</p>
-        <p>au chargement de la page, seule l'image s'affichera. Un bouton en bas à droite permettra de descendre l'affichage jusqu'au block de tricks</p>
+        <i style="color:orange">image accueil + phrase accroche</i>
+        <i style="color:orange">au chargement de la page, seule l'image s'affichera. Un bouton en bas à droite permettra de descendre l'affichage jusqu'au block de tricks</i>
         <img src="https://placehold.it/860x400">
         <div class="row justify-content-end">
             <button >Boutton Affiche le block des tricks</button>
         </div>
-    </div>
-    
+    </div>  
     {# au chargement de la page, seule l'image s'affichera. Un bouton en bas à droite permettra de descendre l'affichage jusqu'au block de tricks #}
     
-    <div class="container my-5 px-auto border">
-        BLOC de TRICKS : 15 premières vignettes + load more
+    <div class="container col-12 my-5 px-auto border">
+        <i style="color:orange">BLOC de TRICKS : 15 premières vignettes + load more</i>
+        {% for trick in tricks %}
         <div class="card" style="width: 18rem;">
             <img class="card-img-top" src="https://placehold.it/250x100" alt="">
             <div class="card-body">
-            <h5 class="card-title">Titre Trick</h5>
-             <a href=trick/1.html class="btn btn-primary">VoirTrick1</a> {# le lien s'écrira avec un path{} et vers trick/ {id} #}
-             <a href=trick/edit/1.html class="btn btn-success">EditTrick1</a> {# Ce bouton n'apparaitra que si l'utilisateur est connecté #}
+                <h5 class="card-title">{{ trick.title }} </h5>
+                <a href="{{ path('trick_show', {'id': trick.id}) }}"><button class="btn-info">La suite</button></a>
+                <a href="{{ path('trick_edit', {'id': trick.id}) }}"><button class="btn-info">Modifier la fiche</button></a> {# le bouton n'est affiché que si l'utilisateur est connecté #} 
+            </div>
         </div>
+        {% endfor %}
     </div>
 
     {# Ce bouton permettra de remonter en haut du bloc de tricks lorsque plus de 15 tricks seront chargés #}
     <div class="row justify-content-end">
         <button >Boutton UP</button>
     </div>
-
 
 {% endblock %}

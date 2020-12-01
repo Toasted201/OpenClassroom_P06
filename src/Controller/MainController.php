@@ -22,40 +22,4 @@ class MainController extends AbstractController
             'tricks' => $tricks
         ]);
     }
-
-    /**
-     * @Route("/tricks", name="tricks")
-     */
-    public function tricks(TrickRepository $trickRepo) : Response
-    {
-        $tricks = $trickRepo->findAll();
-        return $this->render('main/tricks.html.twig', [
-            'controller_name' => 'MainController',
-            'tricks' => $tricks
-        ]);
-    }
-
-
-    /**
-     * @Route("/trick/{id}", name="trick_details")
-     */
-    public function trickDetail(Trick $trick): Response
-    {
-        return $this->render('main/trickDetails.html.twig', [
-            'controller_name' => 'MainController',
-            'trick' => $trick
-        ]);
-    }
-
-    /**
-     * @Route("/trick/edit/{id}", name="trick_edit")
-     */
-    public function trickEdit(Trick $trick): Response
-    {
-        return $this->render('main/trickEdit.html.twig', [
-            'controller_name' => 'MainController',
-            'trick' => $trick
-        ]);
-    }
-
 }
