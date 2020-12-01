@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tricks
+{% endblock %}
+{% block metaName %}SnowTricks Listes des Tricks
+{% endblock %}
+{% block metaContent %}Listes des Tricks
+{% endblock %}
+
+
+{% block body %}
+
+{# TODO La page ne doit s'afficher que si le trick.publish = 1 #}
+   
+{# TODO Mettre une image de fond sur toute la largeur de la page #}
+
+{# TODO Mettre l'image à la une = principale ou image par défaut #}
+<div class="container my-5 px-auto border">
+    <div class="container my-5 px-auto">
+        <i style="color:orange">Image Principal</i> + TitreTrick = <b>{{ trick.title }}</b> <img src="https://placehold.it/860x400">
+    </div>
+  
+{# TODO Afficher carrousel avec les photos et les vidéos à la suite #}
+    <div class="container border my-5">
+        <i style="color:orange">Carroussel. Sur mobile, il sera caché avec un bouton qui permettre de déployer une liste contenant les images et les vidéos</i>
+        <img src="https://placehold.it/120x60">
+        <img src="https://placehold.it/120x60">
+        <img src="https://placehold.it/120x60">
+        <img src="https://placehold.it/120x60">
+        <img src="https://placehold.it/120x60">
+        <img src="https://placehold.it/120x60">
+        <img src="https://placehold.it/120x60">
+    </div>
+
+    <div class="container border my-5">
+        <p>Créé le  = <b>{{ trick.createdAt ? trick.createdAt|date('Y-m-d H:i:s') : '' }} </b></p> 
+        <p>Modifé le  =<b> {{ trick.editedAt ? trick.editedAt|date('Y-m-d H:i:s') : '' }}</b> </p> {# TODO Filtre : Afficher "Modifié le" seulement si editAt exist s'il existe #}
+        <p>Dans la catégorie ....{# TODO Afficher la catégorie #}</p>
+
+        <hr class="my-1">
+
+        <p>Description = <b>{{ trick.description  }}</b></p>
+    </div>
+
+    <div class="container my-5 px-auto border">
+        <button class="btn-info">Ajout un commentaire</button> {# TODO le formulaire n'est affiché que si l'utilisateur est connecté #}
+        <p>Block Commentaires - avec pagination</p>
+    </div>
+
+    <a href="{{ path('trick_index') }}"><button class="btn-info">Retour à la liste</button></a>
+
+    <a href="{{ path('trick_edit', {'id': trick.id}) }}"><button class="btn-info">Modifier la fiche</button></a> {# TODO le bouton n'est affiché que si l'utilisateur est connecté #}
+
+    {{ include('trick/_delete_form.html.twig') }} {# TODO le delete n'est affiché que si l'utilisateur est connecté #}
+</div>   
+   
+{% endblock %}
+
