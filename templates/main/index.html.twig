@@ -22,6 +22,7 @@
         <i style="color:orange">image accueil + phrase accroche</i>
         <i style="color:orange">au chargement de la page, seule l'image s'affichera. Un bouton en bas à droite permettra de descendre l'affichage jusqu'au block de tricks</i>
         <img src="https://placehold.it/860x400">
+        <img src="img\home.jpg">
         <div class="row justify-content-end">
             <button >Boutton Affiche le block des tricks</button>
         </div>
@@ -32,7 +33,13 @@
         <i style="color:orange">BLOC de TRICKS : 15 premières vignettes + load more</i>
         {% for trick in tricks %}
         <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="https://placehold.it/250x100" alt="">
+            {# <img class="card-img-top" src="{https://placehold.it/250x100}" alt=""> #}
+            
+            {% for image in trick.images %}
+            <img class="card-img-top" src="{{ image.src }}" alt="">
+            {% endfor %}
+            
+            
             <div class="card-body">
                 <h5 class="card-title">{{ trick.title }} </h5>
                 <a href="{{ path('trick_show', {'id': trick.id}) }}"><button class="btn-info">La suite</button></a>

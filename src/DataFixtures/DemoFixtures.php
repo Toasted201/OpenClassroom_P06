@@ -3,9 +3,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
-use App\Repository\CategoryRepository;
+use App\Entity\Image;
 use App\Entity\Trick;
 use App\Entity\User;
+use App\Entity\Video;
+use App\Repository\CategoryRepository;
+use App\Repository\TrickRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -23,7 +26,7 @@ class DemoFixtures extends Fixture
         }
         $manager->flush();
 
-        
+        //add first user
         $userTest = new User();
         $userTest->setUsername('BobDoe')
         ->setEmail('bob@doe.com')
@@ -33,6 +36,7 @@ class DemoFixtures extends Fixture
         ->setCreatedAt(new \DateTime());
         $manager->persist($userTest);
 
+        //add Tricks
         $tricksData = [];
         $tricksData = [
             ['title' =>'mute',
@@ -90,6 +94,68 @@ class DemoFixtures extends Fixture
         }
 
         $manager->flush();
-    }
 
+        //add video
+        $videosData=[];
+        $videosData=[
+            ['title'=>'mute', 'url'=>'https://youtu.be/M5NTCfdObfs'],
+            ['title'=>'sad', 'url'=>'https://youtu.be/51sQRIK-TEI'],
+        ];
+
+               foreach ($videosData as $videoData){
+            $video = new Video;
+            /** @var TrickRepository */
+            $trickRepository = $manager->getRepository(Trick::class);
+            $trick = $trickRepository->findOneByTitle($videoData['title']);
+            $video->setTrick($trick)
+                ->setUrl($videoData['url'])
+                ->setCreatedAt(new \DateTime())
+                ->setPublish('1');
+            $manager->persist($video);    
+        }
+        $manager->flush();
+
+        //add img
+        $imgsData=[];
+        $imgsData=[
+            ['titleTrick'=>'mute',
+            'principal'=>'1',
+            'src'=>'img\01mute01.jpg'],
+            ['titleTrick'=>'mute',
+            'principal'=>'0',
+            'src'=>'img\01mute02.png'],
+            ['titleTrick'=>'indy',
+            'principal'=>'1',
+            'src'=>'img\03indy01.jpg'],
+            ['titleTrick'=>'indy',
+            'principal'=>'0',
+            'src'=>'img\03indy02.png'],
+            ['titleTrick'=>'stalefish',
+            'principal'=>'1',
+            'src'=>'img\04stalefish01.jpg'],
+            ['titleTrick'=>'tail grab',
+            'principal'=>'1',
+            'src'=>'img\05tailgrab01.jpg'],
+            ['titleTrick'=>'nose grab',
+            'principal'=>'1',
+            'src'=>'img\06nosegrab01.jpg'],
+            ['titleTrick'=>'japan',
+            'principal'=>'1',
+            'src'=>'img\07japan01.jpg'],
+        ];
+
+        foreach ($imgsData as $imgData){
+            $image = new Image;
+            /** @var TrickRepository */
+            $trickRepository = $manager->getRepository(Trick::class);
+            $trick = $trickRepository->findOneByTitle($imgData['titleTrick']);
+            $image->setTrick($trick)
+                ->setCreatedAt(new \DateTime())
+                ->setPublish('1')
+                ->setPrincipal($imgData['principal'])
+                ->setSrc($imgData['src']);
+            $manager->persist($image);    
+        }
+        $manager->flush();
+    }
 }
