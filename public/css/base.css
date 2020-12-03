@@ -1,0 +1,13 @@
+@media (max-width: 992px)
+{
+    body{
+        padding-bottom:60px;
+        padding-top: 0px; 
+    }
+    
+    .navbar{
+        justify-content: center;
+        padding-top: 2px;
+        padding-bottom: 0px; 
+    }
+}
