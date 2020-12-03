@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +24,14 @@ class EmailVerifier //TODO ?? Pkoi non reconnu
         $this->entityManager = $manager;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param string $verifyEmailRouteName
+     * @param User $user
+     * @param TemplatedEmail $email
+     * @return void
+     */ 
     public function sendEmailConfirmation(string $verifyEmailRouteName, UserInterface $user, TemplatedEmail $email): void
     {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
@@ -41,12 +50,14 @@ class EmailVerifier //TODO ?? Pkoi non reconnu
     }
 
     /**
+     * @param User $user
      * @throws VerifyEmailExceptionInterface
      */
     public function handleEmailConfirmation(Request $request, UserInterface $user): void
     {
-        $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
 
+        $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
+ 
         $user->setIsVerified(true);
 
         $this->entityManager->persist($user);

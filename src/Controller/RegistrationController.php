@@ -61,7 +61,7 @@ class RegistrationController extends AbstractController
             // do anything else you need here, like send an email
             $this->addFlash('success','Un email de validation vous a été envoyé');
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
+           return $guardHandler->authenticateUserAndHandleSuccess(
                 $user,
                 $request,
                 $authenticator,
@@ -89,7 +89,7 @@ class RegistrationController extends AbstractController
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('error', $exception->getReason());
 
-            return $this->redirectToRoute('registration');
+            return $this->redirectToRoute('app_register');
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
