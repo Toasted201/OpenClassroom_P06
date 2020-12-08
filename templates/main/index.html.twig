@@ -6,6 +6,8 @@
 {% endblock %}
 {% block metaContent %}Accueil SnowTricks
 {% endblock %}
+{% block stylesheet %}css\index.css
+{% endblock %}
 
 {% block body %}
     
@@ -17,39 +19,58 @@
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %}
 
-    {# Afficher une image d'accueil  en arrière plan + phrase d'accroche #}
-    <div class="container my-5 px-auto border">
-        <i style="color:orange">image accueil + phrase accroche</i>
-        <i style="color:orange">au chargement de la page, seule l'image s'affichera. Un bouton en bas à droite permettra de descendre l'affichage jusqu'au block de tricks</i>
-        <img src="https://placehold.it/860x400">
-        <img src="img\home.jpg">
-        <div class="row justify-content-end">
-            <button >Boutton Affiche le block des tricks</button>
-        </div>
+    {# TODO Afficher une image d'accueil  en arrière plan + phrase d'accroche #}
+    {# TODO au chargement de la page, seule l'image s'affichera. Un bouton en bas à droite permettra de descendre l'affichage jusqu'au block de tricks #}
+    <div class="my-1 mx-1">
+        <img src="img\home.jpg" class="img-fluid">
     </div>  
-    {# au chargement de la page, seule l'image s'affichera. Un bouton en bas à droite permettra de descendre l'affichage jusqu'au block de tricks #}
-    
-    <div class="container col-12 my-5 px-auto border">
-        <i style="color:orange">BLOC de TRICKS : 15 premières vignettes + load more</i>
-        {% for trick in tricks %}
-        <div class="card" style="width: 18rem;">
-            {# <img class="card-img-top" src="{https://placehold.it/250x100}" alt=""> #}
-            
-            {% for image in trick.images %}
-            <img class="card-img-top" src="{{ image.src }}" alt="">
+   
+
+    {# TODO BLOC de TRICKS : 15 premières vignettes + load more #}
+    <div class="container my-5">
+        <div class="row">
+            {% for trick in tricks %}
+                <div class="col-5cols col-lg-5cols col-sm-5cols d-flex align-items-stretch">
+
+                    <div class="card my-3">
+                    
+                        <div class="card-img-top">
+                        
+                            {% if trick.images is empty %} 
+                                <img src="img\default.png" class="img-fluid" alt="">
+                            {% else %}           
+                                {% for image in trick.images %}                   
+                                    {% if image.principal == 1 %} 
+                                        <img src="{{ image.src }}" class="img-fluid" alt=""> {# TODO Voir le format des images + les centrer verticalement #}
+                                    {% else %}     {# TODO Contrôle à faire si erreur avec plusieurs principal ou aucune #}
+                                    {% endif %}  
+                                {% endfor %}
+                            {% endif %}
+                        </div>                                        
+                        <div class="card-body">
+                        
+                            <h5 class="card-title">{{ trick.title | upper }} </h5>
+                            <a href="{{ path('trick_show', {'id': trick.id}) }}"><button class="btn-info">La suite</button></a>
+                            {% if is_granted('ROLE_USER') %} {# les boutons edit and delete ne sont affichés que si l'utilisateur est connecté #}
+                                <a href="{{ path('trick_edit', {'id': trick.id}) }}">
+                                    <button><i class="far fa-edit"></i></button>
+                                </a>
+                                <a href="{{ path('home', {'id': trick.id}) }}">
+                                    <button><i class="fas fa-trash-alt"></i></button> 
+                                    {# TODO le bouton de suppression n'affiche pas de page spécifique, mais une fenêtre modale demande si l'utlisateur est sûr de vouloir supprimer ce trick #}
+                                </a> 
+                            {% endif %} 
+                        </div>
+
+                    </div>
+
+                </div>
             {% endfor %}
-            
-            
-            <div class="card-body">
-                <h5 class="card-title">{{ trick.title }} </h5>
-                <a href="{{ path('trick_show', {'id': trick.id}) }}"><button class="btn-info">La suite</button></a>
-                <a href="{{ path('trick_edit', {'id': trick.id}) }}"><button class="btn-info">Modifier la fiche</button></a> {# le bouton n'est affiché que si l'utilisateur est connecté #} 
-            </div>
+
         </div>
-        {% endfor %}
     </div>
 
-    {# Ce bouton permettra de remonter en haut du bloc de tricks lorsque plus de 15 tricks seront chargés #}
+    {# TODO Ce bouton permettra de remonter en haut du bloc de tricks lorsque plus de 15 tricks seront chargés #}
     <div class="row justify-content-end">
         <button >Boutton UP</button>
     </div>

@@ -1,0 +1,60 @@
+/* forcer 5 colonnes */
+.col-5cols,
+.col-sm-5cols,
+.col-md-5cols,
+.col-lg-5cols,
+.col-xl-5cols {
+    position: relative;
+    width: 100%;
+    min-height: 50px;
+    padding-right: 15px;
+    padding-left: 15px;
+    border-color: red;
+}
+.col-5cols {
+    width: 20%;
+}
+/* @media (min-width: 540px) {
+    .col-sm-5cols {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+@media (min-width: 720px) {
+    .col-md-5cols {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+@media (min-width: 960px) {
+    .col-lg-5cols {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+@media (min-width: 1140px) {
+    .col-xl-5cols {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}*/
+@media (max-width: 992px) {
+    .col-lg-5cols {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 540px) {
+    .col-sm-5cols {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+.card-img-top {
+    height: 60%;
+    min-height: 200px;
+    object-fit: cover;
+    vertical-align: middle;
+}
