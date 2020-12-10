@@ -36,7 +36,7 @@
     <div class="carousel-inner">
         {% for image in trick.images %} 
         <div class="carousel-item {% if loop.index == 1 %} active {% endif %}">
-            <img class="d-block w-100" src="/{{ image.src }}" alt="">
+            <img class="d-block w-100" src="{{ image.src }}" alt="">
         </div>
         {% endfor %}
     </div>
