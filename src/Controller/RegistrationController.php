@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use Symfony\Component\Uid\Uuid;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 
@@ -33,6 +34,7 @@ class RegistrationController extends AbstractController
     {
         $user = new User();
         $date = new \DateTime();
+        $validationToken = Uuid::v4();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
@@ -45,13 +47,12 @@ class RegistrationController extends AbstractController
                 )
                
             );
-            $user ->setCreatedAt($date);
+            $user->setCreatedAt($date);
+            $user->setValidationToken($validationToken);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-
-            $userId = $user->getId();
 
             //contenu e-mail
             $email = (new TemplatedEmail())
@@ -62,7 +63,7 @@ class RegistrationController extends AbstractController
             ;
 
             //génrérer l'url
-            $uri = $this->generateUrl('app_verify_email', ['userId'=>$userId], UrlGeneratorInterface::ABSOLUTE_URL);
+            $uri = $this->generateUrl('app_verify_email', ['validationToken'=>$validationToken], UrlGeneratorInterface::ABSOLUTE_URL);
 
             //contenu du mail
             $context = $email->getContext();
@@ -82,43 +83,29 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/verify/email", name="app_verify_email")
+     * @Route("/verify/email/{validationToken}", name="app_verify_email")
      */
-    public function verifyUserEmail(Request $request, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator): Response
+    public function verifyUserEmail(Request $request, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator, User $user): Response
     {
-        $userId = $request->query->get('userId'); // récupère le userId de l'URL
-        // for security : used the Doctrine generator to help autogenerate UUID values for the entity primary keys
-        if (!empty($userId)) {
-            $user = $this->getDoctrine()->getRepository(User::class)->findOneBy([ //retrouve le user associé
-                'id' => $userId,
-            ]);
-            $isVerified = $user->isVerified();
-            
-            // TODO simplifier le double if
-            if ($isVerified) {   
-                return $this->redirectToRoute('login');
-            } 
-            else
-            {    
-            $user->setIsVerified(true); // valide l'email
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();      
-            
-            return $guardHandler->authenticateUserAndHandleSuccess( // connecte le user
-                $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
-            }
-        }
-        else {
-            return $this->redirectToRoute('app_register');
-        }
-
+        $isVerified = $user->isVerified();           
+        if ($isVerified) {   
+            return $this->redirectToRoute('login');
+        } 
+        else
+        {    
+        $user->setIsVerified(true); // valide l'email
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();      
+        
+        return $guardHandler->authenticateUserAndHandleSuccess( // connecte le user
+            $user,
+            $request,
+            $authenticator,
+            'main' // firewall name in security.yaml
+        );
         $this->addFlash('success', 'Votre mail a été validé. Vous êtes connecté');
-
         return $this->redirectToRoute('home');
-    }
+        }
+    }    
 }
