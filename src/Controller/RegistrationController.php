@@ -18,7 +18,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Uid\Uuid;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 
 class RegistrationController extends AbstractController
@@ -63,11 +62,11 @@ class RegistrationController extends AbstractController
             ;
 
             //génrérer l'url
-            $uri = $this->generateUrl('app_verify_email', ['validationToken'=>$validationToken], UrlGeneratorInterface::ABSOLUTE_URL);
+            $url = $this->generateUrl('app_verify_email', ['validationToken'=>$validationToken], UrlGeneratorInterface::ABSOLUTE_URL);
 
             //contenu du mail
             $context = $email->getContext();
-            $context['signedUrl'] = $uri;
+            $context['url'] = $url;
             $email->context($context);
             $mailer->send($email);
 

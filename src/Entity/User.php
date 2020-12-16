@@ -74,6 +74,16 @@ class User implements UserInterface
      */
     private $validationToken;
 
+    /**
+     * @ORM\Column(type="uuid", nullable=true)
+     */
+    private $resetToken;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $resetLifeTime;
+
     public function __construct()
     {
         $this->tricks = new ArrayCollection();
@@ -269,6 +279,30 @@ class User implements UserInterface
     public function setValidationToken($validationToken): self
     {
         $this->validationToken = $validationToken;
+
+        return $this;
+    }
+
+    public function getResetToken()
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken($resetToken): self
+    {
+        $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+    public function getResetLifeTime(): ?\DateTimeInterface
+    {
+        return $this->resetLifeTime;
+    }
+
+    public function setResetLifeTime(?\DateTimeInterface $resetLifeTime): self
+    {
+        $this->resetLifeTime = $resetLifeTime;
 
         return $this;
     }
