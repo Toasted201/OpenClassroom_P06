@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use DateInterval;
+use DateTime;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -99,26 +100,32 @@ class ResetPasswordController extends AbstractController
      */
     public function reset(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user): Response
     {
-         // Faire des tests de token. Si ok
-         $form = $this->createForm(ChangePasswordFormType::class);
-         $form->handleRequest($request);
- 
-         if ($form->isSubmitted() && $form->isValid()) {
- 
-             // Encode the plain password, and set it.
-             $user->setPassword(
+        // Controle resetLifeTime
+        $resetLifeTime=$user->getResetLifeTime();
+        $now = new \DateTime();
+        if ($resetLifeTime < $now){
+            $this->addFlash('error','Le lien de réinitalisation a expiré. Vous devez refaire une demande');
+            return $this->redirectToRoute('home');
+        } else {
+            
+            $form = $this->createForm(ChangePasswordFormType::class);
+            $form->handleRequest($request); 
+            
+            if ($form->isSubmitted() && $form->isValid()) { 
+                // Encode the plain password, and set it.
+                $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
                     $form->get('plainPassword')->getData()
-                )
-               
-            );
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
- 
+                    )              
+                );
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($user);
+                $entityManager->flush();
+
             $this->addFlash('success','Votre mot de passe a été modifié. Vous pouvez vous connecter');
             return $this->redirectToRoute('home');
+            }   
         }
         
         return $this->render('reset_password/reset.html.twig', [
