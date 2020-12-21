@@ -19,15 +19,22 @@
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %}
 
-    {# TODO Afficher une image d'accueil  en arrière plan + phrase d'accroche #}
-    {# TODO au chargement de la page, seule l'image s'affichera. Un bouton en bas à droite permettra de descendre l'affichage jusqu'au block de tricks #}
-    <div class="my-1 mx-1">
-        <img src="img\home.jpg" class="img-fluid">
-    </div>  
-   
+
+    {# Au chargement de la page, seule l'image d'accueil (avec phrase d'accroche) s'affichera. Un bouton en bas à droite permettra de descendre l'affichage jusqu'au block de tricks #}   
+    <div class="imageAccueil mx-2 my-1">
+        <img src="img\home.jpg" class="img-fluid"/>
+        <div class="accrocheAccueil">
+            <p><i>Welcome on Board</i></p>
+        </div>
+        <div class="buttonDown">
+            <a href="#blockTricks"><button type="button" class="btn btn-info"><i class="fas fa-arrow-circle-down fa-2x"></i></button></a>
+        </div>
+    </div>
+    
+
 
     {# TODO BLOC de TRICKS : 15 premières vignettes + load more #}
-    <div class="container my-5">
+    <div id="blockTricks" class="container my-5">
         <div class="row">
             {% for trick in tricks %}
                 <div class="col-5cols col-lg-5cols col-sm-5cols d-flex align-items-stretch">
@@ -70,9 +77,9 @@
         </div>
     </div>
 
-    {# TODO Ce bouton permettra de remonter en haut du bloc de tricks lorsque plus de 15 tricks seront chargés #}
-    <div class="row justify-content-end">
-        <button >Boutton UP</button>
+    {# TODO Faire apparaitre le bouton lorsque plus de 15 tricks sont chargés #}
+    <div class="buttonUp">
+        <a href="#blockTricks"><button type="button" class="btn btn-info"><i class="fas fa-arrow-circle-up fa-2x"></i></button></a>
     </div>
-
+  
 {% endblock %}

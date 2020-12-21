@@ -1,3 +1,35 @@
+html {
+    scroll-behavior: smooth;
+  }
+
+.imageAccueil { 
+    position : relative ;
+    opacity: 0.8;
+}
+
+.accrocheAccueil {
+    position : absolute;
+    bottom: 60%;
+    right: 10%;
+    font-size: 7vw;
+    color : #d3b82d;
+    opacity: 0.9;
+}
+
+
+.buttonDown {
+    position : absolute;
+	bottom: 10px;
+    right: 15px;
+}
+
+.buttonUp {
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+  }
+
+
 /* forcer 5 colonnes */
 .col-5cols,
 .col-sm-5cols,
@@ -9,35 +41,11 @@
     min-height: 50px;
     padding-right: 15px;
     padding-left: 15px;
-    border-color: red;
 }
 .col-5cols {
     width: 20%;
 }
-/* @media (min-width: 540px) {
-    .col-sm-5cols {
-        flex: 0 0 50%;
-        max-width: 50%;
-    }
-}
-@media (min-width: 720px) {
-    .col-md-5cols {
-        flex: 0 0 50%;
-        max-width: 50%;
-    }
-}
-@media (min-width: 960px) {
-    .col-lg-5cols {
-        flex: 0 0 50%;
-        max-width: 50%;
-    }
-}
-@media (min-width: 1140px) {
-    .col-xl-5cols {
-        flex: 0 0 50%;
-        max-width: 50%;
-    }
-}*/
+
 @media (max-width: 992px) {
     .col-lg-5cols {
         flex: 0 0 50%;
