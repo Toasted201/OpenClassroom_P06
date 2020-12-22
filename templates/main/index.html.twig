@@ -19,7 +19,6 @@
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %}
 
-
     {# Au chargement de la page, seule l'image d'accueil (avec phrase d'accroche) s'affichera. Un bouton en bas à droite permettra de descendre l'affichage jusqu'au block de tricks #}   
     <div class="imageAccueil mx-2 my-1">
         <img src="img\home.jpg" class="img-fluid"/>
@@ -29,57 +28,65 @@
         <div class="buttonDown">
             <a href="#blockTricks"><button type="button" class="btn btn-info"><i class="fas fa-arrow-circle-down fa-2x"></i></button></a>
         </div>
-    </div>
-    
+    </div>   
 
-
-    {# TODO BLOC de TRICKS : 15 premières vignettes + load more #}
+    {# BLOC de TRICKS : 15 premières vignettes #}
     <div id="blockTricks" class="container my-5">
         <div class="row">
-            {% for trick in tricks %}
-                <div class="col-5cols col-lg-5cols col-sm-5cols d-flex align-items-stretch">
-
-                    <div class="card my-3">
-                    
-                        <div class="card-img-top">
-                        
-                            {% if trick.images is empty %} 
-                                <img src="img\default.png" class="img-fluid" alt="">
-                            {% else %}           
-                                {% for image in trick.images %}                   
-                                    {% if image.principal == 1 %} 
-                                        <img src="{{ image.src }}" class="img-fluid" alt=""> {# TODO Voir le format des images + les centrer verticalement #}
-                                    {% else %}     {# TODO Contrôle à faire si erreur avec plusieurs principal ou aucune #}
-                                    {% endif %}  
-                                {% endfor %}
-                            {% endif %}
-                        </div>                                        
-                        <div class="card-body">
-                        
-                            <h5 class="card-title">{{ trick.title | upper }} </h5>
-                            <a href="{{ path('trick_show', {'id': trick.id}) }}"><button class="btn-info">La suite</button></a>
-                            {% if is_granted('ROLE_USER') %} {# les boutons edit and delete ne sont affichés que si l'utilisateur est connecté #}
-                                <a href="{{ path('trick_edit', {'id': trick.id}) }}">
-                                    <button><i class="far fa-edit"></i></button>
-                                </a>
-                                <a href="{{ path('home', {'id': trick.id}) }}">
-                                    <button><i class="fas fa-trash-alt"></i></button> 
-                                    {# TODO le bouton de suppression n'affiche pas de page spécifique, mais une fenêtre modale demande si l'utlisateur est sûr de vouloir supprimer ce trick #}
-                                </a> 
-                            {% endif %} 
-                        </div>
-
-                    </div>
-
-                </div>
-            {% endfor %}
-
+        {% include ('main/blockTricks.html.twig') %}
         </div>
     </div>
 
-    {# TODO Faire apparaitre le bouton lorsque plus de 15 tricks sont chargés #}
+    {# BLOC de TRICKS : load more #}
+    <p class="load-more">Load More</p> 
+    <input type="hidden" id="numTrick" value="0">
+    <input type="hidden" id="all" value=" {{ nbTricks }}">
+
+    {# Bouton Up : Apparait si on load plus de 15 tricks #}
     <div class="buttonUp">
         <a href="#blockTricks"><button type="button" class="btn btn-info"><i class="fas fa-arrow-circle-up fa-2x"></i></button></a>
     </div>
-  
+
 {% endblock %}
+
+{% block textJS %}
+{# load more #}
+<script type="text/javascript">
+    $('.buttonUp').hide();
+    $(document).ready(function(){
+        $('.load-more').click(function(){
+            var numTrick = Number($('#numTrick').val());
+            var allcount = Number($('#all').val());
+            var trickPerPage = 15;
+            numTrick = numTrick + trickPerPage;
+
+            if(numTrick <= allcount){
+                $("#numTrick").val(numTrick);
+
+                $.ajax({
+                    url: '{{ path('blockTricks') }}',
+                    type : 'GET',
+                    data : 'numTrick=' + numTrick,
+                    success: function(response){
+                        $('.col-5cols').last().after(response);
+                    }    
+                });
+            }
+
+            if (numTrick >= (allcount - trickPerPage)){
+            $('.load-more').hide();  
+            }
+
+            if (numTrick >= trickPerPage){
+            $('.buttonUp').show();  
+            }            
+        })
+    });
+</script>
+{% endblock %}
+
+
+
+  
+
+

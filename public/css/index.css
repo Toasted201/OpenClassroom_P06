@@ -29,6 +29,21 @@ html {
     right: 15px;
   }
 
+  /* Load more */
+.load-more{
+    width: 10%;
+    background: #15a9ce;
+    text-align: center;
+    color: white;
+    padding: 10px 0px;
+    font-family: sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.load-more:hover{
+    cursor: pointer;
+}
 
 /* forcer 5 colonnes */
 .col-5cols,
@@ -58,11 +73,4 @@ html {
         flex: 0 0 100%;
         max-width: 100%;
     }
-}
-
-.card-img-top {
-    height: 60%;
-    min-height: 200px;
-    object-fit: cover;
-    vertical-align: middle;
 }

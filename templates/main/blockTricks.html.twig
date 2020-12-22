@@ -1,0 +1,36 @@
+{% for trick in tricks %}
+    <div class="col-5cols col-lg-5cols col-sm-5cols d-flex align-items-stretch">
+        <div class="card border-primary shadow my-3">
+            <div class="card-header">
+                <a href="{{ path('trick_show', {'id': trick.id}) }}"><h5 class="card-title">{{ trick.title | upper }} </h5></a>
+            </div>
+    
+            <div class="card-body px-1 py-2">
+                <div class="card-img">                        
+                    {% if trick.images is empty %} 
+                        <img src="img\default.png" class="img-fluid" alt="image par défaut">
+                    {% else %}           
+                        {% for image in trick.images %}                   
+                            {% if image.principal == 1 %} 
+                                <img src="{{ image.src }}" class="img-fluid" alt="photo trick"> {# TODO Voir le format des images + les centrer verticalement #}
+                            {% else %}     {# TODO Contrôle à faire si erreur avec plusieurs principal ou aucune #}
+                            {% endif %}  
+                        {% endfor %}
+                    {% endif %}
+                    
+                    {% if is_granted('ROLE_USER') %} {# les boutons edit and delete ne sont affichés que si l'utilisateur est connecté #}
+                        <div class="buttonDown">
+                            <a href="{{ path('trick_edit', {'id': trick.id}) }}">
+                                <button class="btn btn-secondary btn-sm"><i class="far fa-edit"></i></button>
+                            </a>
+                            <a href="{{ path('home', {'id': trick.id}) }}">
+                                <button class="btn btn-secondary btn-sm"><i class="fas fa-trash-alt"></i></button> 
+                                {# TODO le bouton de suppression n'affiche pas de page spécifique, mais une fenêtre modale demande si l'utlisateur est sûr de vouloir supprimer ce trick #}
+                            </a>
+                        </div>
+                    {% endif %}   
+                </div>
+            </div>                                                                                                
+        </div>
+    </div>
+{% endfor %}
