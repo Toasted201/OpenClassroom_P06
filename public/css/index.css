@@ -25,9 +25,13 @@ html {
 
 .buttonUp {
     position: fixed;
-    bottom: 10px;
+    bottom: 70px;
     right: 15px;
-  }
+}
+
+.buttonCard {
+    float:right;
+}
 
   /* Load more */
 .load-more{

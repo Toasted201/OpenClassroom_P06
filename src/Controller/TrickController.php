@@ -89,6 +89,8 @@ class TrickController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('trick_index');
+        $this->addFlash('success','Trick supprimé');
+
+        return $this->redirectToRoute('home');
     }
 }
