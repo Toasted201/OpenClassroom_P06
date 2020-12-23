@@ -132,28 +132,20 @@ class DemoFixtures extends Fixture
         $imgsData=[];
         $imgsData=[
             ['titleTrick'=>'mute',
-            'principal'=>'1',
             'src'=>'/img/01mute01.jpg'],
             ['titleTrick'=>'mute',
-            'principal'=>'0',
             'src'=>'/img/01mute02.png'],
             ['titleTrick'=>'indy',
-            'principal'=>'1',
             'src'=>'/img/03indy01.jpg'],
             ['titleTrick'=>'indy',
-            'principal'=>'0',
             'src'=>'/img/03indy02.png'],
             ['titleTrick'=>'stalefish',
-            'principal'=>'1',
             'src'=>'/img/04stalefish01.jpg'],
             ['titleTrick'=>'tail grab',
-            'principal'=>'1',
             'src'=>'/img/05tailgrab01.jpg'],
             ['titleTrick'=>'nose grab',
-            'principal'=>'1',
             'src'=>'/img/06nosegrab01.jpg'],
             ['titleTrick'=>'japan',
-            'principal'=>'1',
             'src'=>'/img/07japan01.jpg'],
         ];
 
@@ -165,7 +157,6 @@ class DemoFixtures extends Fixture
             $image->setTrick($trick)
                 ->setCreatedAt(new \DateTime())
                 ->setPublish('1')
-                ->setPrincipal($imgData['principal'])
                 ->setSrc($imgData['src']);
             $manager->persist($image);    
         }
@@ -180,7 +171,6 @@ class DemoFixtures extends Fixture
             $image->setTrick($trick)
                 ->setCreatedAt(new \DateTime())
                 ->setPublish('1')
-                ->setPrincipal('0')
                 ->setSrc('https://via.placeholder.com/150');
             $manager->persist($image);    
         }

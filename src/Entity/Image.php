@@ -28,11 +28,6 @@ class Image
     private $publish;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $principal;
-
-    /**
      * @ORM\Column(type="text")
      */
     private $src;
@@ -68,18 +63,6 @@ class Image
     public function setPublish(bool $publish): self
     {
         $this->publish = $publish;
-
-        return $this;
-    }
-
-    public function getPrincipal(): ?bool
-    {
-        return $this->principal;
-    }
-
-    public function setPrincipal(bool $principal): self
-    {
-        $this->principal = $principal;
 
         return $this;
     }

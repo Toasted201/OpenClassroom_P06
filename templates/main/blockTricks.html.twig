@@ -1,6 +1,7 @@
 {% for trick in tricks %}
     <div class="col-5cols col-lg-5cols col-sm-5cols d-flex align-items-stretch">
         <div class="card border-primary shadow my-3">
+
             <div class="card-header px-2">
                 <a href="{{ path('trick_show', {'id': trick.id}) }}"><h7 class="card-title">{{ trick.title | upper }} </h7></a>
                 <div>
@@ -13,20 +14,21 @@
                 </div>   
             </div>
     
+            {# L'image "à la une" est laissé libre, par défaut, la première image ajoutée est à préférer. Si aucune image n'a été ajoutée, vous veillerez à mettre une image par défaut #}
             <div class="card-body px-1 py-2">
                 <div class="card-img">                        
                     {% if trick.images is empty %} 
                         <img src="img\default.png" class="img-fluid" alt="image par défaut">
                     {% else %}           
                         {% for image in trick.images %}                   
-                            {% if image.principal == 1 %} 
-                                <img src="{{ image.src }}" class="img-fluid" alt="photo trick"> {# Voir le format des images + les centrer verticalement #}
-                            {% else %}     {# TODO Contrôle à faire si erreur avec plusieurs principal ou aucune #}
-                            {% endif %}  
+                            {% if loop.first %} 
+                            <img src="{{ image.src }}" class="img-fluid" alt="photo trick">
+                            {% endif %}
                         {% endfor %}
                     {% endif %}                 
                 </div>
-            </div>                                                                                                
+            </div> 
+
         </div>
     </div>
 {% endfor %}
