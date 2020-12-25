@@ -6,53 +6,85 @@
 {% endblock %}
 {% block metaContent %}Listes des Tricks
 {% endblock %}
-
+{% block stylesheet %}/css/galery.css
+{% endblock %}
 {% block body %}
 
 {# TODO La page ne doit s'afficher que si le trick.publish = 1 #}
    
-{# TODO Mettre une image de fond sur toute la largeur de la page #}
+{# TODO Option : Mettre une image de fond sur toute la largeur de la page #}
 
-{# TODO Mettre l'image à la une = principale ou image par défaut #}
 <div class="container my-5 px-auto border">
     
-    <div class="row"> {# TODO Mise en page #}
+    <div class="row">
         <div class="col-10">
             <h1>{{ trick.title | upper }}</h1>
         </div>
+
         {% if is_granted('ROLE_USER') %} {# les boutons edit and delete ne sont affichés que si l'utilisateur est connecté #}
-        <div class="col-1">
-            <a href="{{ path('trick_edit', {'id': trick.id}) }}">
-                <button><i class="far fa-edit"></i></button>
-            </a>
-        </div>    
-        <div>    
-            {{ include('trick/_delete_form.html.twig') }}
-        </div>     
+            <div class="col-1">
+                <a href="{{ path('trick_edit', {'id': trick.id}) }}">
+                    <button><i class="far fa-edit"></i></button>
+                </a>
+            </div>    
+            <div>    
+                {{ include('trick/_delete_form.html.twig') }}
+            </div>     
         {% endif %}
     </div>         
 
-    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel"> {# TODO figer la hauteur du carrousel #}
-    <div class="carousel-inner">
-        {% for image in trick.images %} 
-        <div class="carousel-item {% if loop.index == 1 %} active {% endif %}">
-            <img class="d-block w-100" src="{{ image.src }}" alt="">
+    <div id="carouselTrick" class="carousel slide" data-ride="carousel">
+
+        <div class="carousel-inner d-flex align-items-center">
+            {% for image in trick.images %}
+                <div class="carousel-item{% if loop.first %} active {% endif %}">
+                    <img class="d-block mx-auto img-responsive" src="{{ image.src }}" alt="">
+                </div>
+            {% endfor %}
+            {% for video in trick.videos %}
+                <div class="carousel-item">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="{{ video.url }}" allowfullscreen></iframe>
+                    </div>
+                </div>
+            {% endfor %}       
         </div>
-        {% endfor %}
+
+        <a class="carousel-control-prev" href="#carouselTrick" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselTrick" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+
+
+            <div class="carousel-indicators d-block mx-auto "> {#TODO Option : modifier le design de la scroll barre#}
+                <div id="carouselTrick" class="carousel slide" data-ride="carousel">
+                    {% set i = 0 %}
+                    <div class="scrolling-wrapper row flex-row flex-nowrap mt-2 pb-2">
+                        {% for image in trick.images %}
+                            <div class="col-1" data-target="#carouselTrick" data-slide-to="{{ i }}">
+                                <img src="{{ image.src }}" class="img-fluid" alt="">
+                            </div> 
+                            {% set i = i + 1 %}             
+                        {% endfor %}
+                        {% set v = i %}
+                        {% for video in trick.videos %}
+                            <div class="col-1" data-target="#carouselTrick" data-slide-to="{{ v }}">
+                                <i class="fab fa-youtube fa-3x"></i> {# TODO : afficher une vignette différente pour chque vidéo #}
+                            </div>
+                            {% set v = v + 1 %} 
+                        {% endfor %}               
+                    </div>    
+                </div>     
+            </div>
+
     </div>
 
-    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-    </div>
 </div>
-
-{# TODO Afficher gallery avec les photos et les vidéos à la suite #}    
+  
 {# TODO  Galerie : Sur mobile, elle sera caché avec un bouton qui permettre de déployer une liste contenant les images et les vidéos #}
 
     <div class="container border my-5">

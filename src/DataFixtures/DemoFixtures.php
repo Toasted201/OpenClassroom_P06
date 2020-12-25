@@ -111,8 +111,8 @@ class DemoFixtures extends Fixture
         //add video
         $videosData=[];
         $videosData=[
-            ['title'=>'mute', 'url'=>'https://youtu.be/M5NTCfdObfs'],
-            ['title'=>'sad', 'url'=>'https://youtu.be/51sQRIK-TEI'],
+            ['title'=>'mute', 'url'=>'https://www.youtube.com/embed/M5NTCfdObfs'],
+            ['title'=>'sad', 'url'=>'https://www.youtube.com/embed/51sQRIK-TEI'],
         ];
 
                foreach ($videosData as $videoData){

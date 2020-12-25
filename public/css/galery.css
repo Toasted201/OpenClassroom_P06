@@ -1,0 +1,12 @@
+.carousel-inner{
+    height: 700px;
+}
+
+.carousel-indicators{
+    position :relative;
+    width: auto;
+}
+
+.scrolling-wrapper{
+    overflow-x: auto;
+}
