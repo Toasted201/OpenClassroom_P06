@@ -10,3 +10,11 @@
 .scrolling-wrapper{
     overflow-x: auto;
 }
+
+@media (min-width: 992px)
+{
+    .collapse.dont-collapse-sm{
+        display : block;
+        visibility: visible;
+    }
+}

@@ -14,14 +14,15 @@
    
 {# TODO Option : Mettre une image de fond sur toute la largeur de la page #}
 
-<div class="container my-5 px-auto border">
-    
+{# entête #}
+{# les boutons edit and delete ne sont affichés que si l'utilisateur est connecté #}
+<div class="container my-2 border">  
     <div class="row">
         <div class="col-10">
             <h1>{{ trick.title | upper }}</h1>
         </div>
 
-        {% if is_granted('ROLE_USER') %} {# les boutons edit and delete ne sont affichés que si l'utilisateur est connecté #}
+        {% if is_granted('ROLE_USER') %} 
             <div class="col-1">
                 <a href="{{ path('trick_edit', {'id': trick.id}) }}">
                     <button><i class="far fa-edit"></i></button>
@@ -32,12 +33,20 @@
             </div>     
         {% endif %}
     </div>         
+</div>
 
+{# Galerie #}
+{# L'image "à la une" est laissé libre, par défaut, la première image ajoutée est à préférer #}
+{# Si aucune image n'a été ajoutée, vous veillerez à mettre une image par défaut #}
+{# Sur mobile, les miniatures seront cachées. Un bouton permettra de déployer une liste = data-toggle collapse + css dont-collapse sur mobile & masquer bouton sur lg) #}
+<div class="container border">
     <div id="carouselTrick" class="carousel slide" data-ride="carousel">
-
         <div class="carousel-inner d-flex align-items-center">
+            {% if trick.images is empty %}  
+                <img src="\img\default.png" class="img-fluid" alt="image par défaut">
+            {% endif %}    
             {% for image in trick.images %}
-                <div class="carousel-item{% if loop.first %} active {% endif %}">
+                <div class="carousel-item{% if loop.first %} active {% endif %}">  
                     <img class="d-block mx-auto img-responsive" src="{{ image.src }}" alt="">
                 </div>
             {% endfor %}
@@ -49,6 +58,34 @@
                 </div>
             {% endfor %}       
         </div>
+       
+        <div class="carousel-indicators d-block mx-auto "> {#TODO Option : modifier le design de la scroll barre#}                  
+            <div class="col text-center my-1">
+                <button class="btn btn-primary text-center d-lg-none" type="button" data-toggle="collapse" data-target="#collapseIndicators" aria-expanded="false">
+                    Plus de photos
+                </button>
+            </div>
+            <div class="collapse dont-collapse-sm" id="collapseIndicators">
+                <div id="carouselIndicators" class="carousel slide" data-ride="carousel">
+                    {% set i = 0 %}
+                    <div class="scrolling-wrapper row flex-row flex-nowrap mt-2 pb-2">
+                        {% for image in trick.images %}
+                            <div class="col-2" data-target="#carouselTrick" data-slide-to="{{ i }}">
+                                <img src="{{ image.src }}" class="img-fluid" alt="">
+                            </div> 
+                            {% set i = i + 1 %}             
+                        {% endfor %}
+                        {% set v = i %}
+                        {% for video in trick.videos %}
+                            <div class="col-2" data-target="#carouselTrick" data-slide-to="{{ v }}">
+                                <i class="fab fa-youtube fa-3x"></i> {# TODO : afficher une vignette différente pour chaque vidéo #}
+                            </div>
+                            {% set v = v + 1 %} 
+                        {% endfor %}               
+                    </div>    
+                </div>     
+            </div>
+        </div>
 
         <a class="carousel-control-prev" href="#carouselTrick" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -57,68 +94,40 @@
         <a class="carousel-control-next" href="#carouselTrick" role="button" data-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
-        </a>
-
-
-            <div class="carousel-indicators d-block mx-auto "> {#TODO Option : modifier le design de la scroll barre#}
-                <div id="carouselTrick" class="carousel slide" data-ride="carousel">
-                    {% set i = 0 %}
-                    <div class="scrolling-wrapper row flex-row flex-nowrap mt-2 pb-2">
-                        {% for image in trick.images %}
-                            <div class="col-1" data-target="#carouselTrick" data-slide-to="{{ i }}">
-                                <img src="{{ image.src }}" class="img-fluid" alt="">
-                            </div> 
-                            {% set i = i + 1 %}             
-                        {% endfor %}
-                        {% set v = i %}
-                        {% for video in trick.videos %}
-                            <div class="col-1" data-target="#carouselTrick" data-slide-to="{{ v }}">
-                                <i class="fab fa-youtube fa-3x"></i> {# TODO : afficher une vignette différente pour chque vidéo #}
-                            </div>
-                            {% set v = v + 1 %} 
-                        {% endfor %}               
-                    </div>    
-                </div>     
-            </div>
-
+        </a>  
     </div>
-
 </div>
+
+{# Fiche Trick #}
+<div class="container border my-5">
+    <p>Créé le  <b>{{ trick.createdAt ? trick.createdAt|date('Y-m-d H:i:s') : '' }} </b></p> 
+    {% if trick.editedAt %} <p>Modifé le <b> {{ trick.editedAt ? trick.editedAt|date('Y-m-d H:i:s') : '' }}</b> </p> {% endif %} {# Filtre : Afficher "Modifié le" seulement si editAt exist s'il existe #}
+    <p>Dans la catégorie {% for category in trick.category %} {{ category.title }}  {% endfor %}{# TODO Afficher la catégorie #}</p>
+
+    <hr class="my-1">
+
+    <p>Description = <b>{{ trick.description }}</b></p>
+</div>
+
+{# Block Commentaire #}
+<div class="container my-5 px-auto border">
+    {% if is_granted('ROLE_USER') %} {# Le formulaire n'est affiché que si l'utilisateur est connecté #}
+    <button class="btn-info">Ajout un commentaire</button> {# TODO le formulaire d'ajout commentaire #}
+    {% else %}
+    <a href="{{ path('login') }}"><button class="btn-info">Vous voulez laisser un commentaire : Connectez-vous</button></a>
+    {% endif %}
+    
+    {# TODO mise en page block commentaire #}
+    {% for comment in trick.comments %} 
+        <div>
+            posté le {{ comment.createdAt ? comment.createdAt|date('Y-m-d') : '' }} par  {% for user in comment.user %} {{ user.username }}  {% endfor %} {# TODO Afficher pseudo #}
+        </div>
+        <div>
+            {{ comment.content }}
+        </div>    
+    {% endfor %}
+    {# TODO  pagination commentaire #}
+</div>
+
   
-{# TODO  Galerie : Sur mobile, elle sera caché avec un bouton qui permettre de déployer une liste contenant les images et les vidéos #}
-
-    <div class="container border my-5">
-        <p>Créé le  <b>{{ trick.createdAt ? trick.createdAt|date('Y-m-d H:i:s') : '' }} </b></p> 
-        {% if trick.editedAt %} <p>Modifé le <b> {{ trick.editedAt ? trick.editedAt|date('Y-m-d H:i:s') : '' }}</b> </p> {% endif %} {# Filtre : Afficher "Modifié le" seulement si editAt exist s'il existe #}
-        <p>Dans la catégorie {% for category in trick.category %} {{ category.title }}  {% endfor %}{# TODO Afficher la catégorie #}</p>
-
-
-
-        <hr class="my-1">
-
-        <p>Description = <b>{{ trick.description }}</b></p>
-    </div>
-
-    <div class="container my-5 px-auto border">
-         {% if is_granted('ROLE_USER') %} {# Le formulaire n'est affiché que si l'utilisateur est connecté #}
-        <button class="btn-info">Ajout un commentaire</button> {# TODO le formulaire d'ajout commentaire #}
-        {% else %}
-        <a href="{{ path('login') }}"><button class="btn-info">Vous voulez laisser un commentaire : Connectez-vous</button></a>
-        {% endif %}
-        
-        {# TODO mise en page block commentaire #}
-        {% for comment in trick.comments %} 
-            <div>
-                posté le {{ comment.createdAt ? comment.createdAt|date('Y-m-d') : '' }} par  {% for user in comment.user %} {{ user.username }}  {% endfor %} {# TODO Afficher pseudo #}
-            </div>
-            <div>
-                {{ comment.content }}
-            </div>    
-        {% endfor %}
-        {# TODO  pagination commentaire #}
-    </div>
-
-</div>   
-   
 {% endblock %}
-
