@@ -2,6 +2,19 @@
     height: 700px;
 }
 
+.carousel-inner img {
+    width: 100%;
+    height: auto;
+}
+
+.carousel-control-prev-icon{
+    background-color: #54b4eb;
+}
+
+.carousel-control-next-icon{
+    background-color: #54b4eb;
+}   
+
 .carousel-indicators{
     position :relative;
     width: auto;
