@@ -53,9 +53,16 @@ class TrickController extends AbstractController
      */
     public function show(Trick $trick): Response
     {
-        return $this->render('trick/show.html.twig', [
-            'trick' => $trick,
-        ]);
+        /*TODO Test : Retour page d'accueil si le trick n'existe pas*/
+
+        $publish=$trick->getPublish();
+        if ($publish){
+            return $this->render('trick/show.html.twig', [
+                'trick' => $trick,
+            ]);
+        } else {
+            return $this->redirectToRoute('home'); /*Retour sur la page d'accueil si le trick demandé n'est pas publié*/
+        }
     }
 
     /**
