@@ -96,15 +96,16 @@
     </div>
 </div>
 
-{# Fiche Trick #}
+{# Block Description #}
+{# Filtre : "Modifié le" affiché seulement si editAt existe #}
 <div class="container border my-5">
-    <p>Créé le  <b>{{ trick.createdAt ? trick.createdAt|date('Y-m-d H:i:s') : '' }} </b></p> 
-    {% if trick.editedAt %} <p>Modifé le <b> {{ trick.editedAt ? trick.editedAt|date('Y-m-d H:i:s') : '' }}</b> </p> {% endif %} {# Filtre : Afficher "Modifié le" seulement si editAt exist s'il existe #}
-    <p>Dans la catégorie {% for category in trick.category %} {{ category.title }}  {% endfor %}{# TODO Afficher la catégorie #}</p>
+    <p>Créé le  {{ trick.createdAt ? trick.createdAt|date('d-m-Y') : '' }} 
+    {% if trick.editedAt %} et modifé le {{ trick.editedAt ? trick.editedAt|date('d-m-Y') : '' }} </p> {% endif %} 
+    <p>Dans la catégorie <b>{{ trick.category.title | upper }}</b></p>
 
     <hr class="my-1">
 
-    <p>Description = <b>{{ trick.description }}</b></p>
+    <p><h5>Description :</h5> {{ trick.description | capitalize }}</p>
 </div>
 
 {# Block Commentaire #}
