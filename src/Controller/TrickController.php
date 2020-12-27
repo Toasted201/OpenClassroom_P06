@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Trick;
+use App\Entity\User;
+use App\Form\CommentFormType;
 use App\Form\TrickType;
 use App\Repository\TrickRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,21 +53,37 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="trick_show", methods={"GET"})
+     * @Route("/{id}", name="trick_show", methods={"GET", "POST"})
      */
-    public function show(Trick $trick): Response
+    public function show(Request $request, Trick $trick, User $user): Response
     {
         /*TODO Test : Retour page d'accueil si le trick n'existe pas*/
 
         $publish=$trick->getPublish();
-        if ($publish){
-            return $this->render('trick/show.html.twig', [
-                'trick' => $trick,
-            ]);
-        } else {
-            return $this->redirectToRoute('home'); /*Retour sur la page d'accueil si le trick demandé n'est pas publié*/
+        if (!$publish) {
+        return $this->redirectToRoute('home'); /*Retour sur la page d'accueil si le trick demandé n'est pas publié*/
         }
+        
+        $comment = new Comment();
+        $form = $this->createForm(CommentFormType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setTrick($trick);
+            $comment->setUser($user);
+            $comment->setCreatedAt(new DateTime());
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+        }
+
+        return $this->render('trick/show.html.twig', [
+                'trick' => $trick,
+                'commentForm' => $form->createView()
+            ]);
     }
+
 
     /**
      * @Route("/{id}/edit", name="trick_edit", methods={"GET","POST"})

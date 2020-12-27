@@ -30,7 +30,7 @@ class Comment
     /**
      * @ORM\Column(type="boolean")
      */
-    private $publish;
+    private $publish = true;
 
     /**
      * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="comments")

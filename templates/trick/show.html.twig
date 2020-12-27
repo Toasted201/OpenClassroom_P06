@@ -110,16 +110,24 @@
 
 {# Block Commentaire #}
 <div class="container my-5 px-auto border">
-    {% if is_granted('ROLE_USER') %} {# Le formulaire n'est affiché que si l'utilisateur est connecté #}
-    <button class="btn-info">Ajout un commentaire</button> {# TODO le formulaire d'ajout commentaire #}
+    {% if is_granted('ROLE_USER') %} {# n'est affiché que si l'utilisateur est connecté #}
+        
+        {# formulaire d'ajout commentaire #}
+        {{ form_start(commentForm) }}
+            {{ form_row(commentForm.content, {
+                label: 'Laissez un commentaire :'})
+            }}
+            <button type="submit" class="btn-primary">Envoyer</button>
+        {{ form_end(commentForm) }}
+        
     {% else %}
-    <a href="{{ path('login') }}"><button class="btn-info">Vous voulez laisser un commentaire : Connectez-vous</button></a>
+        <a href="{{ path('login') }}"><button class="btn-primary">Vous voulez laisser un commentaire : Connectez-vous</button></a>
     {% endif %}
     
     {# TODO mise en page block commentaire #}
     {% for comment in trick.comments %} 
         <div>
-            posté le {{ comment.createdAt ? comment.createdAt|date('Y-m-d') : '' }} par  {% for user in comment.user %} {{ user.username }}  {% endfor %} {# TODO Afficher pseudo #}
+            posté le {{ comment.createdAt ? comment.createdAt|date('Y-m-d') : '' }} par  {{ comment.user.username }}
         </div>
         <div>
             {{ comment.content }}
