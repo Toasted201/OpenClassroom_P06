@@ -58,7 +58,7 @@ class TrickController extends AbstractController
     /**
      * @Route("/{id}", name="trick_show", methods={"GET", "POST"})
      */
-    public function show(Request $request, Environment $twig, CommentRepository $commentRepo, Trick $trick, UserInterface $user): Response
+    public function show(Request $request, Environment $twig, CommentRepository $commentRepo, Trick $trick): Response
     {
         /*TODO Test : Retour page d'accueil si le trick n'existe pas*/
 
@@ -67,6 +67,7 @@ class TrickController extends AbstractController
         return $this->redirectToRoute('home'); /*Retour sur la page d'accueil si le trick demandé n'est pas publié*/
         }
         
+        $user = $this->getUser();
         $comment = new Comment();
         $form = $this->createForm(CommentFormType::class, $comment);
         $form->handleRequest($request);
