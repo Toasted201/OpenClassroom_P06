@@ -7,6 +7,7 @@ use App\Entity\Trick;
 use App\Entity\User;
 use App\Form\CommentFormType;
 use App\Form\TrickType;
+use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,7 +56,7 @@ class TrickController extends AbstractController
     /**
      * @Route("/{id}", name="trick_show", methods={"GET", "POST"})
      */
-    public function show(Request $request, Trick $trick, User $user): Response
+    public function show(Request $request, CommentRepository $commentRepo, Trick $trick, User $user): Response
     {
         /*TODO Test : Retour page d'accueil si le trick n'existe pas*/
 
@@ -77,10 +78,13 @@ class TrickController extends AbstractController
             $entityManager->persist($comment);
             $entityManager->flush();
         }
-
+        
+        $comments = $commentRepo ->findBy(['trick' => $trick, 'publish' => '1'], ['createdAt' => 'DESC']);
+        
         return $this->render('trick/show.html.twig', [
                 'trick' => $trick,
-                'commentForm' => $form->createView()
+                'commentForm' => $form->createView(),
+                'comments' => $comments
             ]);
     }
 

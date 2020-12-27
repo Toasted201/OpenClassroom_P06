@@ -110,9 +110,11 @@
 
 {# Block Commentaire #}
 <div class="container my-5 px-auto border">
+
+    {# formulaire d'ajout commentaire #}
     {% if is_granted('ROLE_USER') %} {# n'est affiché que si l'utilisateur est connecté #}
         
-        {# formulaire d'ajout commentaire #}
+        
         {{ form_start(commentForm) }}
             {{ form_row(commentForm.content, {
                 label: 'Laissez un commentaire :'})
@@ -124,17 +126,19 @@
         <a href="{{ path('login') }}"><button class="btn-primary">Vous voulez laisser un commentaire : Connectez-vous</button></a>
     {% endif %}
     
-    {# TODO mise en page block commentaire #}
-    {% for comment in trick.comments %} 
-        <div>
-            posté le {{ comment.createdAt ? comment.createdAt|date('Y-m-d') : '' }} par  {{ comment.user.username }}
-        </div>
-        <div>
+    
+    {# Listes commenaires #}
+    {% for comment in comments %} 
+        <hr my-1>
+        <p>
             {{ comment.content }}
-        </div>    
+        </p>    
+        <i><p style="text-align:right;">
+            posté le {{ comment.createdAt ? comment.createdAt|date('d/m/Y') : '' }} par  {{ comment.user.username }}
+        </p></i>
+
     {% endfor %}
     {# TODO  pagination commentaire #}
 </div>
-
   
 {% endblock %}
