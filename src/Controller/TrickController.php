@@ -14,6 +14,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Twig\Environment;
 
 /**
  * @Route("/trick")
@@ -56,7 +58,7 @@ class TrickController extends AbstractController
     /**
      * @Route("/{id}", name="trick_show", methods={"GET", "POST"})
      */
-    public function show(Request $request, CommentRepository $commentRepo, Trick $trick, User $user): Response
+    public function show(Request $request, Environment $twig, CommentRepository $commentRepo, Trick $trick, UserInterface $user): Response
     {
         /*TODO Test : Retour page d'accueil si le trick n'existe pas*/
 
@@ -79,12 +81,15 @@ class TrickController extends AbstractController
             $entityManager->flush();
         }
         
-        $comments = $commentRepo ->findBy(['trick' => $trick, 'publish' => '1'], ['createdAt' => 'DESC']);
-        
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $commentRepo->getCommentPaginator($trick, $offset);
+
         return $this->render('trick/show.html.twig', [
                 'trick' => $trick,
                 'commentForm' => $form->createView(),
-                'comments' => $comments
+                'comments' => $paginator,
+                'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
+                'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
             ]);
     }
 

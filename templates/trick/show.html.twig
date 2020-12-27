@@ -117,7 +117,7 @@
         
         {{ form_start(commentForm) }}
             {{ form_row(commentForm.content, {
-                label: 'Laissez un commentaire :'})
+                label: 'Laissez un commentaire :', value: ''}) 
             }}
             <button type="submit" class="btn-primary">Envoyer</button>
         {{ form_end(commentForm) }}
@@ -125,7 +125,7 @@
     {% else %}
         <a href="{{ path('login') }}"><button class="btn-primary">Vous voulez laisser un commentaire : Connectez-vous</button></a>
     {% endif %}
-    
+    {# TODO le commentaire reste dans le champ "laisser un commentaire" après la validation et le rechargement de la page #}
     
     {# Listes commenaires #}
     {% for comment in comments %} 
@@ -138,7 +138,18 @@
         </p></i>
 
     {% endfor %}
-    {# TODO  pagination commentaire #}
+    
+    {# pagination commentaire #} {# https://symfony.com/doc/current/the-fast-track/fr/10-twig.html#paginating-the-comments #}
+        <hr my-1>
+        {% if previous >= 0 %}
+            <a href="{{ path('trick_show', {'id': trick.id, offset: previous}) }}"><i class="fas fa-backward shadow-sm p-3 mb-5 bg-white rounded"></i></a> 
+        {% endif %}
+        {% if next < comments|length %}
+            <a href="{{ path('trick_show', {'id': trick.id, offset: next }) }}"><i class="fas fa-forward shadow-sm p-3 mb-5 bg-white rounded"></i></a>
+        {% endif %}
+
+
+
 </div>
   
 {% endblock %}
