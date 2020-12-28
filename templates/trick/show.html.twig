@@ -10,8 +10,6 @@
 {% endblock %}
 {% block body %}
   
-{# TODO Option : Mettre une image de fond sur toute la largeur de la page #}
-
 {# Entête #}
 {# les boutons edit and delete ne sont affichés que si l'utilisateur est connecté #}
 <div class="container my-2 border">  
@@ -34,11 +32,11 @@
 </div>
 
 {# Galerie #}
-{# L'image "à la une" est laissé libre, par défaut, la première image ajoutée est à préférer #}
+{# L'image "à la une" = la première image ajoutée  #}
 {# Si aucune image n'a été ajoutée, vous veillerez à mettre une image par défaut #}
 {# Sur mobile, les miniatures seront cachées. Un bouton permettra de déployer une liste = data-toggle collapse + css dont-collapse sur mobile & masquer bouton sur lg) #}
 <div class="container border">
-    <div id="carouselTrick" class="carousel slide" data-ride="carousel">
+    <div id="carouselTrick" class="carousel" data-ride="carousel">
         <div class="carousel-inner d-flex align-items-center">
             {% if trick.images is empty %}  
                 <img src="\img\default.png" class="img-fluid" alt="image par défaut">
@@ -85,6 +83,7 @@
             </div>
         </div>
 
+        {% if v > 1 %}
         <a class="carousel-control-prev" href="#carouselTrick" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
@@ -92,7 +91,8 @@
         <a class="carousel-control-next" href="#carouselTrick" role="button" data-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
-        </a>  
+        </a>
+        {% endif %}  
     </div>
 </div>
 
@@ -125,7 +125,6 @@
     {% else %}
         <a href="{{ path('login') }}"><button class="btn-primary">Vous voulez laisser un commentaire : Connectez-vous</button></a>
     {% endif %}
-    {# TODO le commentaire reste dans le champ "laisser un commentaire" après la validation et le rechargement de la page #}
     
     {# Listes commenaires #}
     {% for comment in comments %} 
