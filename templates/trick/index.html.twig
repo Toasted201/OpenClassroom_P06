@@ -1,43 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Trick index{% endblock %}
+{% block title %}SnowTricks : Liste {% endblock %}
 
 {% block body %}
-    <h1>Liste des Tricks</h1>{# TODO A mettre en page #}
+    <h1>Liste des Tricks</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Title</th>
+                <th>Nom</th>
                 <th>Description</th>
-                <th>CreatedAt</th>
-                <th>EditedAt</th>
-                <th>Publish</th>
-                <th>actions</th>
+                <th>Créé le</th>
+                {% if is_granted('ROLE_USER') %}
+                    <th>Publié</th>
+                    <th>Actions</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
         {% for trick in tricks %}
             <tr>
-                <td>{{ trick.id }}</td>
-                <td>{{ trick.title }}</td>
-                <td>{{ trick.description }}</td>
-                <td>{{ trick.createdAt ? trick.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ trick.editedAt ? trick.editedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ trick.publish ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('trick_show', {'id': trick.id}) }}">show</a>
-                    <a href="{{ path('trick_edit', {'id': trick.id}) }}">edit</a>
-                </td>
-            </tr>
+            {% if is_granted('ROLE_USER') %}
+                <td><a href="{{ path('trick_show', {'id': trick.id}) }}"><h7 class="card-title">{{ trick.title | upper }} </h7></a></td>
+                <td>{{ trick.description | capitalize  }}</td>
+                <td>{{ trick.createdAt ? trick.createdAt|date('d/m/Y') : '' }}</td>
+                <td>{{ trick.publish ? 'Yes' : 'No' }} </td>
+                <td><a href="{{ path('trick_edit', {'id': trick.id}) }}"><button class="btn btn-secondary btn-sm buttonCard"><i class="far fa-edit"></i></button></a>                         
+                    {{ include('trick/_delete_form.html.twig') }}    
+                </td>   
+            {% else %}
+                {% if trick.publish %}
+                <td><a href="{{ path('trick_show', {'id': trick.id}) }}"><h7 class="card-title">{{ trick.title | upper }} </h7></a></td>
+                <td>{{ trick.description | capitalize  }}</td>
+                <td>{{ trick.createdAt ? trick.createdAt|date('d/m/Y') : '' }}</td>
+                {% endif %}
+            {% endif %}    
+            </tr>            
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="7">No tricks</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <button class="btn-info"><a href="{{ path('trick_new') }}">Create new</button></a>
 {% endblock %}
