@@ -19,23 +19,23 @@
 
     <div class="container w-75 my-5 py-3 border">
     
-    <h1>Inscrivez-vous</h1>
-    <a href="{{ path('login') }} "><button class="btn-info">Déjà Inscrit? Connectez-vous</button></a>
+        <h1>Inscrivez-vous</h1>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.username, {
-            label: 'Votre pseudo'
-        })  }}
-        {{ form_row(registrationForm.email, {
-            label: 'Votre email'
-        })  }}
-        {{ form_row(registrationForm.plainPassword) }}
+        {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.username, {
+                label: 'Votre pseudo'
+            })  }}
+            {{ form_row(registrationForm.email, {
+                label: 'Votre email'
+            })  }}
+            {{ form_row(registrationForm.plainPassword) }}
 
-        <button type="submit" class="btn-primary">S'inscrire</button>
-
-    {{ form_end(registrationForm) }}
-
-    
-
+            <button type="submit" class="btn-primary">S'inscrire</button>
+        {{ form_end(registrationForm) }}
+  
     </div>
+
+    <div class="row h-100 justify-content-center align-items-center">
+        <a href="{{ path('login') }} "><button class="btn btn-success">Déjà Inscrit? Connectez-vous</button></a>
+    </div>   
 {% endblock %}
