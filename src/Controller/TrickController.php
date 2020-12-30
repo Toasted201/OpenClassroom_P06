@@ -37,11 +37,14 @@ class TrickController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $user = $this->getUser();
         $trick = new Trick();
-        $form = $this->createForm(TrickType::class, $trick);
-        $form->handleRequest($request);
+        $formTrick = $this->createForm(TrickType::class, $trick);
+        $formTrick->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($formTrick->isSubmitted() && $formTrick->isValid()) {
+            $trick->setCreatedAt(new DateTime());
+            $trick->setUser($user);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($trick);
             $entityManager->flush();
@@ -51,7 +54,7 @@ class TrickController extends AbstractController
 
         return $this->render('trick/new.html.twig', [
             'trick' => $trick,
-            'form' => $form->createView(),
+            'formTrick' => $formTrick->createView(),
         ]);
     }
 
