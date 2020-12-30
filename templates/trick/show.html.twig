@@ -73,8 +73,10 @@
                         {% endfor %}
                         {% set v = i %}
                         {% for video in trick.videos %}
-                            <div class="col-2" data-target="#carouselTrick" data-slide-to="{{ v }}">
-                                <i class="fab fa-youtube fa-3x"></i> {# TODO : afficher une vignette différente pour chaque vidéo #}
+                            {% set urlParts = ( video.url |split('embed/',2)) %}
+                            {% set urlId = urlParts[1] %}                            
+                            <div class="col-2" data-target="#carouselTrick" data-slide-to="{{ v }}">                              
+                                <img src="http://i3.ytimg.com/vi/{{ urlId }}/hqdefault.jpg" class="img-fluid" alt="">{#  afficher une miniature pour chaque vidéo #}
                             </div>
                             {% set v = v + 1 %} 
                         {% endfor %}               
