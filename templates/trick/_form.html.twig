@@ -1,4 +1,16 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
+{{ form_start(formTrick) }}
+    {{ form_row(formTrick.title, {
+                label: 'Titre'
+    }) }}
+    {{ form_row(formTrick.description, {
+        label: 'Description'
+    }) }}
+    {{ form_row(formTrick.category, {
+                label: 'Catégorie'
+    }) }}
+    {{ form_row(formTrick.publish, {
+        label: 'Publié'
+    }) }}
+
     <button class="btn-primary">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+{{ form_end(formTrick) }}

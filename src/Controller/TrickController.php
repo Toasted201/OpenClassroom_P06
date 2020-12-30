@@ -100,18 +100,18 @@ class TrickController extends AbstractController
      */
     public function edit(Request $request, Trick $trick): Response
     {
-        $form = $this->createForm(TrickType::class, $trick);
-        $form->handleRequest($request);
+        $formTrick = $this->createForm(TrickType::class, $trick);
+        $formTrick->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($formTrick->isSubmitted() && $formTrick->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('trick_index');
+            return $this->redirectToRoute('trick_edit',['id' => $trick->getId()]);
         }
 
         return $this->render('trick/edit.html.twig', [
             'trick' => $trick,
-            'form' => $form->createView(),
+            'formTrick' => $formTrick->createView(),
         ]);
     }
 

@@ -1,7 +1,7 @@
 @media (max-width: 992px)
 {
     body{
-        padding-bottom:65px;
+        padding-bottom:85px;
         padding-top: 0px; 
     }
     
@@ -12,6 +12,9 @@
     }
 }
 
-body{
-    padding-bottom: 20px;
-}
+@media (min-width: 992px)
+{
+    body{
+    padding-bottom: 40px;
+    }
+}    
