@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TrickRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -67,7 +68,7 @@ class Trick
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity=Video::class, mappedBy="trick")
+     * @ORM\OneToMany(targetEntity=Video::class, mappedBy="trick", cascade={"persist"})
      */
     private $videos;
 
@@ -239,6 +240,8 @@ class Trick
     {
         if (!$this->videos->contains($video)) {
             $this->videos[] = $video;
+            $video->setCreatedAt(new DateTime());
+            $video->setPublish(true);
             $video->setTrick($this);
         }
 

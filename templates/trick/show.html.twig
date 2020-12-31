@@ -36,18 +36,18 @@
 {# Si aucune image n'a été ajoutée, vous veillerez à mettre une image par défaut #}
 {# Sur mobile, les miniatures seront cachées. Un bouton permettra de déployer une liste = data-toggle collapse + css dont-collapse sur mobile & masquer bouton sur lg) #}
 <div class="container border">
+    {% if trick.images is empty and trick.videos is empty %} 
+            <img src="\img\default.png" class="img-fluid" alt="image par défaut">
+    {% else %}
     <div id="carouselTrick" class="carousel" data-ride="carousel">
-        <div class="carousel-inner d-flex align-items-center">
-            {% if trick.images is empty %}  
-                <img src="\img\default.png" class="img-fluid" alt="image par défaut">
-            {% endif %}    
+        <div class="carousel-inner d-flex align-items-center">                     
             {% for image in trick.images %}
-                <div class="carousel-item{% if loop.first %} active {% endif %}">  
+                <div class="carousel-item{% if loop.first %} active {% endif %}">   
                     <img class="d-block mx-auto img-responsive" src="{{ image.src }}" alt="">
                 </div>
             {% endfor %}
             {% for video in trick.videos %}
-                <div class="carousel-item">
+                <div class="carousel-item{% if trick.images is empty and loop.first %} active {% endif %}">
                     <div class="embed-responsive embed-responsive-16by9">
                         <iframe class="embed-responsive-item" src="{{ video.url }}" allowfullscreen></iframe>
                     </div>
@@ -96,6 +96,7 @@
         </a>
         {% endif %}  
     </div>
+    {% endif %}
 </div>
 
 {# Block Description #}

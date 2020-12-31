@@ -63,8 +63,6 @@ class TrickController extends AbstractController
      */
     public function show(Request $request, Environment $twig, CommentRepository $commentRepo, Trick $trick): Response
     {
-        /*TODO Test : Retour page d'accueil si le trick n'existe pas*/
-
         $publish=$trick->getPublish();
         if (!$publish) {
         return $this->redirectToRoute('home'); /*Retour sur la page d'accueil si le trick demandé n'est pas publié*/
