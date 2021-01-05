@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nouveau Tricks
+{% block title %}Nouveau Trick
 {% endblock %}
 {% block metaName %}SnowTricks Ajout d'un Trick
 {% endblock %}
@@ -11,13 +11,9 @@
 {% block body %}
 <div class="container my-5 px-auto border">
     <h1>Ajouter un nouveau Trick</h1>
-
-    {{ include('trick/_form.html.twig') }}
-    {# TODO Erreur si l'utlisateur n'est pas connecté #} 
+    {{ include('trick/_form.html.twig', {'button_label': 'Valider la création'}) }}
         {# soit redirigé sur la page du formulaire en cas d'erreur, en précisant le(s) type(s) d'erreurs ;
         soit redirigé sur la page listant des figures avec un message flash donnant une indication concernant le bon déroulement de l'enregistrement en base de données en cas de succès.
         #}
-
-    <a href="{{ path('trick_index') }}">Retour à la liste</a>
 </div>    
 {% endblock %}

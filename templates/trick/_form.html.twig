@@ -1,43 +1,110 @@
 {{ form_start(formTrick) }}
+
     {{ form_row(formTrick.title, {
                 label: 'Titre'
     }) }}
+
     {{ form_row(formTrick.description, {
         label: 'Description'
     }) }}
+
     {{ form_row(formTrick.category, {
         label: 'Catégorie'
     }) }}
+
     {{ form_row(formTrick.publish, {
         label: 'Publié'
-    }) }}
-    
- 
-Vidéos
-    <ul class="videoUrl" data-prototype="{{ form_widget(formTrick.videos.vars.prototype)|e('html_attr') }}"></ul>
-    <button type="button" class="add_item_link" data-collection-holder-class="videoUrl">Add an url</button>
-
-
+    }) }}  
+    <hr>
+    Vidéos
+    {# store the prototype on the data-prototype attribute #}
+    <ul id="videoUrl-fields-list"
+        data-prototype="{{ form_widget(formTrick.videos.vars.prototype)|e }}"
+        data-widget-tags="{{ '<li></li>'|e }}"
+        data-widget-counter="{{ formTrick.videos|length }}">
     {% for videoField in formTrick.videos %}
         <li>
-            {{ form_widget(videoField)
-            }}
+            {{ form_errors(videoField) }}
+            {{ form_widget(videoField) }}
         </li>
     {% endfor %}
     </ul>
 
-    <button class="btn-primary">{{ button_label|default('Save') }}</button>
+    <button type="button"
+        class="add-another-collection-widget btn-sm btn-primary y-3"
+        data-list-selector="#videoUrl-fields-list">Ajouter une nouvelle vidéo
+    </button>
+     <hr>
+
+    <div class="row h-100 justify-content-center align-items-center">
+        <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+    </div>    
+
 {{ form_end(formTrick) }}
 
+
 {% block textJS %}
+{# https://symfony.com/doc/current/reference/forms/types/collection.html #}
+<script>
+$(document).ready(function () {
+    $('.add-another-collection-widget').click(function (e) {
+        var list = $($(this).attr('data-list-selector'));
+        // Try to find the counter of the list or use the length of the list
+        var counter = list.data('widget-counter') || list.children().length;
+
+        // grab the prototype template
+        var newWidget = list.attr('data-prototype');
+        // replace the "__name__" used in the id and name of the prototype
+        // with a number that's unique to your url
+        // end name attribute looks like name="trick[videos][2]"
+        newWidget = newWidget.replace(/__name__/g, counter);
+        // Increase the counter
+        counter++;
+        // And store it, the length cannot be used if deleting widgets is allowed
+        list.data('widget-counter', counter);
+
+        // create a new list element and add it to the list
+        var newElem = $(list.attr('data-widget-tags')).html(newWidget);
+        newElem.appendTo(list);
+
+        // also add a remove button
+        newElem.append('<a href="#" class="remove-row">Annuler<i class="fas fa-trash"></i></a>');    
+        // handle the removal
+        $('.remove-row').click(function(e) {
+            e.preventDefault();          
+            $(this).parent().remove();
+            return false;
+        });
+    });
+});
+</script>
+
+    {#<ul class="videoUrl" data-prototype="{{ form_widget(formTrick.videos.vars.prototype)|e('html_attr') }}">
+        {% for videoField in formTrick.videos %}
+            <li style="list-style-type: none">
+                {{ form_widget(videoField)
+                }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <button type="button" class="add_item_link btn btn-primary btn-sm" data-collection-holder-class="videoUrl">Ajouter une vidéo</button>
+    
+    <div class="row h-100 justify-content-center align-items-center">
+        <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+    </div>
+
+{{ form_end(formTrick) }}#}
+
 {# https://symfony.com/doc/current/form/form_collections.html #}
+{#
 <script> 
     $(document).ready(function() {
-        // Get the ul that holds the collection of tags
+        // Get the ul that holds the collection of videos
         var $videoUrlCollectionHolder = $('ul.videoUrl');
-        // count the current form inputs we have (e.g. 2), use that as the new
-        // index when inserting a new item (e.g. 2)
-        $videoUrlCollectionHolder.data('index', $videoUrlCollectionHolder.find('input').length);
+        // count the current form inputs we have, use that as the new
+        // index when inserting a new item
+        $videoUrlCollectionHolder.data('index', $videoUrlCollectionHolder.find('li').length);
 
         $('body').on('click', '.add_item_link', function(e) {
             var $collectionHolderClass = $(e.currentTarget).data('collectionHolderClass');
@@ -57,23 +124,29 @@ Vidéos
         var index = $collectionHolder.data('index');
 
         var newForm = prototype;
-        // You need this only if you didn't set 'label' => false in your tags field in TaskType
-        // Replace '__name__label__' in the prototype's HTML to
-        // instead be a number based on how many items we have
-        // newForm = newForm.replace(/__name__label__/g, index);
-
         // Replace '__name__' in the prototype's HTML to
         // instead be a number based on how many items we have
-        //newForm = newForm.replace(/__name__/g, index);
+        newForm = newForm.replace(/__name__/g, index);
 
         // increase the index with one for the next item
         $collectionHolder.data('index', index + 1);
 
-        // Display the form in the page in an li, before the "Add a tag" link li
-        var $newFormLi = $('<li></li>').append(newForm);
+        // Display the form in the page in an li
+        var $newFormLi = $('<li style="list-style-type: none"></li>').append(newForm);
         // Add the new form at the end of the list
         $collectionHolder.append($newFormLi)
-    }
 
+
+        // also add a remove button
+        $newFormLi.append('<a href="#" class="remove-tag"><i class="fas fa-trash"></i></a>');    
+        // handle the removal
+        $('.remove-tag').click(function(e) {
+            e.preventDefault();          
+            $(this).parent().remove();
+            return false;
+        });
+    }
 </script>
+#}
+
 {% endblock %}

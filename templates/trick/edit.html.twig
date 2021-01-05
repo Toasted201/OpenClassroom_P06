@@ -50,20 +50,10 @@
         <h4> Ajouter des images </h4>{# TODO ajouter image #}
 </div>
 
-{# TODO Block vidéos #}
-{% if trick.videos %}
-<div class="container mt-1 px-auto border">
-    <h4>Modifier des vidéos </h4>
-    {% for video in trick.videos %}
-        {{ video.url }}
-    {% endfor %}
-</div>
-{% endif %}
-
 {# block description #}
 <div class="container mt-1 px-auto border">
     <h4> Modifier les caractéristiques</h4>   
-    {{ include('trick/_form.html.twig', {'button_label': 'Update'}) }} {# TODO Seul un utilisateur connecté peut update #}
+    {{ include('trick/_form.html.twig', {'button_label': 'Enregistrer les modifications'}) }} {# TODO Seul un utilisateur connecté peut update #}
 </div>
 
 <div class="container mt-1 px-auto border">
