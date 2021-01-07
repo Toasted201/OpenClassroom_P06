@@ -28,7 +28,7 @@ class TrickController extends AbstractController
     public function index(TrickRepository $trickRepository): Response
     {
         return $this->render('trick/index.html.twig', [
-            'tricks' => $trickRepository->findAll(),
+            'tricks' => $trickRepository->findBy([],['createdAt' => 'desc']),
         ]);
     }
 
@@ -45,9 +45,12 @@ class TrickController extends AbstractController
         if ($formTrick->isSubmitted() && $formTrick->isValid()) {
             $trick->setCreatedAt(new DateTime());
             $trick->setUser($user);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($trick);
             $entityManager->flush();
+
+            $this->addFlash('success','Nouveau trick enregistré');
 
             return $this->redirectToRoute('trick_index');
         }

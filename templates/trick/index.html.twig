@@ -5,6 +5,14 @@
 {% block body %}
     <h1>Liste des Tricks</h1>
 
+    {% for flashSuccess in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ flashSuccess }}</div>
+    {% endfor %}
+    
+    {% for flashError in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
     <table class="table">
         <thead>
             <tr>
