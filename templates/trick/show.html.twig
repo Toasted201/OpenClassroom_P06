@@ -13,7 +13,7 @@
 {# Entête #}
 {# les boutons edit and delete ne sont affichés que si l'utilisateur est connecté #}
 <div class="container my-2 border">  
-    <div class="row">
+    <div class="row align-items-center">
         <div class="col-10">
             <h1>{{ trick.title | upper }}</h1>
         </div>
@@ -21,7 +21,7 @@
         {% if is_granted('ROLE_USER') %} 
             <div class="col-1">
                 <a href="{{ path('trick_edit', {'id': trick.id}) }}">
-                    <button><i class="far fa-edit"></i></button>
+                    <button class="btn btn-success btn-sm buttonCard"><i class="far fa-edit"></i></button>
                 </a>
             </div>    
             <div>    

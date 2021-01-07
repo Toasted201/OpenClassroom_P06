@@ -8,56 +8,19 @@
 {% endblock %}
 
 {% block body %}
-{# TODO La page ne doit être accessible que si l'utlisateur est connecté #}
+
+{# TODO La page ne doit être accessible que si l'utlisateur est connecté + Seul un utilisateur connecté peut update #}
 
 {# TODO Option : Mettre une image de fond sur toute la largeur de la page #}
 
-{# Entête #}
-<div class="container mt-5 px-auto border">
+<div class="container mt-5 px-auto border">  
     
-    <h1>{{ trick.title | upper }}</h1>
-  
-    <div class="d-flex align-items-center">
-            {% if trick.images is empty %}  
-                <img src="\img\default.png" class="img-fluid" alt="image par défaut">
-            {% endif %}    
-            {% for image in trick.images %}
-                {% if loop.first %} 
-                    <img class="d-block mx-auto img-responsive" src="{{ image.src }}" alt="">
-                {% endif %}    
-            {% endfor %}   
-        </div>
-</div>
-
-
-{# Block images #}
-{# TODO chaque image pourra être modifiée de manière individuelle #}
-{% if trick.images is not empty %}
-    <div class="container mt-1 px-auto border">
-        <h4> Supprimer des images </h4>
-        <div class="row">
-            {% for image in trick.images %}                                                     
-                <div class="col-2">
-                    <img class="img-thumbnail" src="{{ image.src }}" class="img-fluid" alt="photo trick">
-                    <button class="btn btn-secondary btn-sm buttonCard"><i class="fas fa-trash-alt"></i></button> {#TODO supprimer image#}
-                </div>    
-            {% endfor %}
-        </div> 
-    </div>
-{% endif %}
-
-<div class="container mt-1 px-auto border">
-        <h4> Ajouter des images </h4>{# TODO ajouter image #}
-</div>
-
-{# block description #}
-<div class="container mt-1 px-auto border">
-    <h4> Modifier les caractéristiques</h4>   
-    {{ include('trick/_form.html.twig', {'button_label': 'Enregistrer les modifications'}) }} {# TODO Seul un utilisateur connecté peut update #}
-</div>
-
-<div class="container mt-1 px-auto border">
-    Vous voulez supprimer cette fiche ? {{ include('trick/_delete_form.html.twig') }}
+    <div class="row justify-content-space-around">
+        <div class="col"><h4>Page de modification de la fiche : <a href="{{ path('trick_show', {'id': trick.id}) }}">{{ trick.title | upper }}</a></h4></div>
+        <div>{{ include('trick/_delete_form.html.twig') }}</div>
+    </div>    
+ 
+    {{ include('trick/_form.html.twig', {'button_label': 'Enregistrer les modifications'}) }}
 </div>
 
 {% endblock %}

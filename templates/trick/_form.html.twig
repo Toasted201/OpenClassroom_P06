@@ -1,46 +1,93 @@
 {{ form_start(formTrick) }}
 
-    {{ form_row(formTrick.title, {
-                label: 'Titre'
-    }) }}
+{{ form_widget(formTrick._token) }}
 
-    {{ form_row(formTrick.description, {
-        label: 'Description'
-    }) }}
+{{ form_row(formTrick.title, {
+    label: 'Titre'
+    }) 
+}}
 
-    {{ form_row(formTrick.category, {
-        label: 'Catégorie'
-    }) }}
+{{ form_row(formTrick.description, {
+    label: 'Description'
+    }) 
+}}
 
-    {{ form_row(formTrick.publish, {
-        label: 'Publié'
-    }) }}  
-    <hr>
-    Vidéos
-    {# store the prototype on the data-prototype attribute #}
-    <ul id="videoUrl-fields-list"
-        data-prototype="{{ form_widget(formTrick.videos.vars.prototype)|e }}"
-        data-widget-tags="{{ '<li></li>'|e }}"
-        data-widget-counter="{{ formTrick.videos|length }}">
-    {% for videoField in formTrick.videos %}
-        <li>
-            {{ form_errors(videoField) }}
-            {{ form_widget(videoField) }}
-        </li>
-    {% endfor %}
-    </ul>
+{{ form_row(formTrick.category, {
+    label: 'Catégorie'
+    }) 
+}}
 
-    <button type="button"
-        class="add-another-collection-widget btn-sm btn-primary y-3"
-        data-list-selector="#videoUrl-fields-list">Ajouter une nouvelle vidéo
-    </button>
-     <hr>
+{{ form_row(formTrick.publish, {
+    label: 'Publié'
+    }) 
+}}
 
-    <div class="row h-100 justify-content-center align-items-center">
-        <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+
+<hr>
+{# PHOTOS #}
+<div class="row">
+    <div class="col">
+        {{ form_label(formTrick.images, 'Images') }}
+    </div>
+    <div>         
+        <button type="button"
+            class="add-another-collection-widget btn-sm btn-primary"
+            data-list-selector="">Ajouter une nouvelle image
+        </button>
     </div>    
+</div>
+    
+<ul class="list-group px-1" id="imageSrc-fields-list"
+    data-prototype="{{ form_widget(formTrick.images.vars.prototype)|e }}"
+    data-widget-tags="{{ '<li class="list-group-item"></li>'|e }}"
+    data-widget-counter="{{ formTrick.images|length }}">
+{% for imageField in formTrick.images %}
+    {{ form_errors(imageField) }}
+    <li class="list-group-item px-1 d-flex justify-content-start align-items-top">
+        <div class="col-11 px-1">{{ form_widget(imageField) }}</div>
+        <a href="#" class="removeUrl"><i class="fas fa-trash btn btn-sm btn-warning"></i></a>
+    </li>
+{% endfor %}
+</ul>
+{# PHOTOS #} 
 
-{{ form_end(formTrick) }}
+<hr>
+{# VIDEOS #}
+<div class="row">
+    <div class="col">
+        {{ form_label(formTrick.videos, 'Vidéos') }}
+    </div>
+    <div>         
+        <button type="button"
+            class="add-another-collection-widget btn-sm btn-primary"
+            data-list-selector="#videoUrl-fields-list">Ajouter une nouvelle vidéo
+        </button>
+    </div>    
+</div>
+    
+{# store the prototype on the data-prototype attribute #}
+<ul class="list-group px-1" id="videoUrl-fields-list"
+    data-prototype="{{ form_widget(formTrick.videos.vars.prototype)|e }}"
+    data-widget-tags="{{ '<li class="list-group-item"></li>'|e }}"
+    data-widget-counter="{{ formTrick.videos|length }}">
+{% for videoField in formTrick.videos %}
+    {{ form_errors(videoField) }}
+    <li class="list-group-item px-1 d-flex justify-content-start align-items-top">
+        <div class="col-11 px-1">{{ form_widget(videoField) }}</div>
+        <a href="#" class="removeUrl"><i class="fas fa-trash btn btn-sm btn-warning"></i></a>
+    </li>
+{% endfor %}
+</ul>
+{# VIDEOS #}    
+
+<hr>
+{# BOUTON SAVE #}  
+<div class="row h-100 justify-content-center align-items-center">
+    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+</div>
+{# BOUTON SAVE #}      
+
+{{ form_end(formTrick, { "render_rest": false }) }}
 
 
 {% block textJS %}
@@ -68,7 +115,7 @@ $(document).ready(function () {
         newElem.appendTo(list);
 
         // also add a remove button
-        newElem.append('<a href="#" class="remove-row">Annuler<i class="fas fa-trash"></i></a>');    
+        newElem.append('<a href="#" class="remove-row"><i class="fas fa-window-close"></i></a>');    
         // handle the removal
         $('.remove-row').click(function(e) {
             e.preventDefault();          
@@ -77,76 +124,14 @@ $(document).ready(function () {
         });
     });
 });
-</script>
-
-    {#<ul class="videoUrl" data-prototype="{{ form_widget(formTrick.videos.vars.prototype)|e('html_attr') }}">
-        {% for videoField in formTrick.videos %}
-            <li style="list-style-type: none">
-                {{ form_widget(videoField)
-                }}
-            </li>
-        {% endfor %}
-    </ul>
-
-    <button type="button" class="add_item_link btn btn-primary btn-sm" data-collection-holder-class="videoUrl">Ajouter une vidéo</button>
-    
-    <div class="row h-100 justify-content-center align-items-center">
-        <button class="btn btn-success">{{ button_label|default('Save') }}</button>
-    </div>
-
-{{ form_end(formTrick) }}#}
-
-{# https://symfony.com/doc/current/form/form_collections.html #}
-{#
-<script> 
-    $(document).ready(function() {
-        // Get the ul that holds the collection of videos
-        var $videoUrlCollectionHolder = $('ul.videoUrl');
-        // count the current form inputs we have, use that as the new
-        // index when inserting a new item
-        $videoUrlCollectionHolder.data('index', $videoUrlCollectionHolder.find('li').length);
-
-        $('body').on('click', '.add_item_link', function(e) {
-            var $collectionHolderClass = $(e.currentTarget).data('collectionHolderClass');
-            // add a new tag form (see next code block)
-            addFormToCollection($collectionHolderClass);
-        })
-    });
-
-    function addFormToCollection($collectionHolderClass) {
-        // Get the ul that holds the collection of tags
-        var $collectionHolder = $('.' + $collectionHolderClass);
-
-        // Get the data-prototype explained earlier
-        var prototype = $collectionHolder.data('prototype');
-
-        // get the new index
-        var index = $collectionHolder.data('index');
-
-        var newForm = prototype;
-        // Replace '__name__' in the prototype's HTML to
-        // instead be a number based on how many items we have
-        newForm = newForm.replace(/__name__/g, index);
-
-        // increase the index with one for the next item
-        $collectionHolder.data('index', index + 1);
-
-        // Display the form in the page in an li
-        var $newFormLi = $('<li style="list-style-type: none"></li>').append(newForm);
-        // Add the new form at the end of the list
-        $collectionHolder.append($newFormLi)
-
-
-        // also add a remove button
-        $newFormLi.append('<a href="#" class="remove-tag"><i class="fas fa-trash"></i></a>');    
-        // handle the removal
-        $('.remove-tag').click(function(e) {
-            e.preventDefault();          
+    //cancel the add action
+    $(document).ready(function () {
+        $('.removeUrl').click(function (e) {
+            e.preventDefault();
             $(this).parent().remove();
             return false;
         });
-    }
-</script>
-#}
+    });    
 
+</script>
 {% endblock %}
