@@ -84,6 +84,11 @@ class User implements UserInterface
      */
     private $resetLifeTime;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $userFilename;
+
     public function __construct()
     {
         $this->tricks = new ArrayCollection();
@@ -306,4 +311,16 @@ class User implements UserInterface
 
         return $this;
     }
+    public function getUserFilename()
+    {
+        return $this->userFilename;
+    }
+
+    public function setUserFilename($userFilename)
+    {
+        $this->userFilename = $userFilename;
+
+        return $this;
+    }
+
 }

@@ -8,6 +8,7 @@ use App\Security\EmailVerifier;
 use App\Security\UserAuthenticator;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -17,6 +18,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Uid\Uuid;
 
 
@@ -29,7 +31,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer): Response
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer, SluggerInterface $slugger): Response
     {
         $user = new User();
         $date = new \DateTime();
@@ -38,6 +40,34 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+        //upload photo
+            /** @var UploadedFile $photoFile */
+            $photoFile = $form->get('photo')->getData();
+
+            // this condition is needed because the 'photo' field is not required
+            // so the PNG file must be processed only when a file is uploaded
+            if ($photoFile) {
+                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$photoFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $photoFile->move(
+                        $this->getParameter('photo_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // TODO... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PNG file name
+                // instead of its contents
+                $user->setUserFilename($newFilename);
+            }
+                       
             // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
@@ -70,7 +100,7 @@ class RegistrationController extends AbstractController
             $email->context($context);
             $mailer->send($email);
 
-            // do anything else you need here, like send an email
+            // flash
             $this->addFlash('success','Un email de validation vous a été envoyé');
 
             return $this->redirectToRoute('home');

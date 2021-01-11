@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tricks
+{% block title %}SnowTricks_{{ trick.title |capitalize }}
 {% endblock %}
-{% block metaName %}SnowTricks Listes des Tricks
+{% block metaName %}Trick {{ trick.title |capitalize }}
 {% endblock %}
-{% block metaContent %}Listes des Tricks
+{% block metaContent %}SnowTricks_{{ trick.title |capitalize }}
 {% endblock %}
 {% block stylesheet %}/css/galery.css
 {% endblock %}
@@ -132,13 +132,26 @@
     {# Listes commenaires #}
     {% for comment in comments %} 
         <hr my-1>
-        <p>
-            {{ comment.content }}
-        </p>    
-        <i><p style="text-align:right;">
-            posté le {{ comment.createdAt ? comment.createdAt|date('d/m/Y') : '' }} par  {{ comment.user.username }}
-        </p></i>
-
+        <div class="container">
+            <div class="row">
+                <div class="d-flex justify-content-start">
+                    {% if comment.user.userFilename is empty %}
+                        <img src="https://eu.ui-avatars.com/api/?length=1&background=random&name={{ comment.user.username }}" width="50px" height="50px">
+                    {% else %}
+                        <img src="/img/uploads/photo/{{ comment.user.userFilename }}" width="50px" height="50px">
+                    {% endif %} 
+                </div>
+                <div class="d-flex align-self-end ml-1"> 
+                    <strong>{{ comment.user.username }}</strong>
+                </div>
+            </div>
+            <div class="row">
+                <i><font size="-1">posté le {{ comment.createdAt ? comment.createdAt|date('d/m/Y') : '' }}</font></i>
+            </div>         
+            <div class="row text-info">
+                {{ comment.content }} 
+            </div>
+        </div>  
     {% endfor %}
     
     {# pagination commentaire #} {# https://symfony.com/doc/current/the-fast-track/fr/10-twig.html#paginating-the-comments #}
@@ -149,8 +162,6 @@
         {% if next < comments|length %}
             <a href="{{ path('trick_show', {'id': trick.id, offset: next }) }}"><i class="fas fa-forward shadow-sm p-3 mb-5 bg-white rounded"></i></a>
         {% endif %}
-
-
 
 </div>
   

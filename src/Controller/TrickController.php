@@ -84,6 +84,9 @@ class TrickController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
             $entityManager->flush();
+            return $this->redirectToRoute('trick_show', [
+                'id' => $trick->getId()
+            ]);
         }
         
         $offset = max(0, $request->query->getInt('offset', 0));

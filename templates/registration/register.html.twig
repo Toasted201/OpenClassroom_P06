@@ -22,14 +22,12 @@
         <h1>Inscrivez-vous</h1>
 
         {{ form_start(registrationForm) }}
-            {{ form_row(registrationForm.username, {
-                label: 'Votre pseudo'
-            })  }}
-            {{ form_row(registrationForm.email, {
-                label: 'Votre email'
-            })  }}
+            {{ form_row(registrationForm.username) }}
+            {{ form_row(registrationForm.email) }}
             {{ form_row(registrationForm.plainPassword) }}
+            {{ form_row(registrationForm.photo) }}
 
+            <p><font size="-1">* champs obligatoires</font></p>
             <button type="submit" class="btn-primary">S'inscrire</button>
         {{ form_end(registrationForm) }}
   
@@ -38,4 +36,13 @@
     <div class="row h-100 justify-content-center align-items-center">
         <a href="{{ path('login') }} "><button class="btn btn-success">Déjà Inscrit? Connectez-vous</button></a>
     </div>   
+{% endblock %}
+
+{% block textJS %}
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+<script>
+    $(document).ready(function () {
+        bsCustomFileInput.init()
+    })
+</script>
 {% endblock %}
