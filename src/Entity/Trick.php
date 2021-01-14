@@ -213,7 +213,6 @@ class Trick
         if (!$this->images->contains($image)) {
             $this->images[] = $image;
             $image->setCreatedAt(new DateTime());
-            $image->setPublish(true);
             $image->setTrick($this);
         }
 
@@ -240,10 +239,8 @@ class Trick
         if (!$this->videos->contains($video)) {
             $this->videos[] = $video;
             $video->setCreatedAt(new DateTime());
-            $video->setPublish(true);
             $video->setTrick($this);
         }
-
         return $this;
     }
 

@@ -96,7 +96,7 @@ class DemoFixtures extends Fixture
         $manager->flush();
 
         //add tricks Test
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $trickTest = new Trick();
             $trickTest->setTitle('Titre ' . $i)
                     ->setDescription('description ' .  $i)
@@ -122,8 +122,7 @@ class DemoFixtures extends Fixture
             $trick = $trickRepository->findOneByTitle($videoData['title']);
             $video->setTrick($trick)
                 ->setUrl($videoData['url'])
-                ->setCreatedAt(new \DateTime())
-                ->setPublish('1');
+                ->setCreatedAt(new \DateTime());
             $manager->persist($video);    
         }
         $manager->flush();
@@ -132,21 +131,21 @@ class DemoFixtures extends Fixture
         $imgsData=[];
         $imgsData=[
             ['titleTrick'=>'mute',
-            'src'=>'/img/01mute01.jpg'],
+            'src'=>'/img/demo/01mute01.jpg'],
             ['titleTrick'=>'mute',
-            'src'=>'/img/01mute02.png'],
+            'src'=>'/img/demo/01mute02.png'],
             ['titleTrick'=>'indy',
-            'src'=>'/img/03indy01.jpg'],
+            'src'=>'/img/demo/03indy01.jpg'],
             ['titleTrick'=>'indy',
-            'src'=>'/img/03indy02.png'],
+            'src'=>'/img/demo/03indy02.png'],
             ['titleTrick'=>'stalefish',
-            'src'=>'/img/04stalefish01.jpg'],
+            'src'=>'/img/demo/04stalefish01.jpg'],
             ['titleTrick'=>'tail grab',
-            'src'=>'/img/05tailgrab01.jpg'],
+            'src'=>'/img/demo/05tailgrab01.jpg'],
             ['titleTrick'=>'nose grab',
-            'src'=>'/img/06nosegrab01.jpg'],
+            'src'=>'/img/demo/06nosegrab01.jpg'],
             ['titleTrick'=>'japan',
-            'src'=>'/img/07japan01.jpg'],
+            'src'=>'/img/demo/07japan01.jpg'],
         ];
 
         foreach ($imgsData as $imgData){
@@ -156,22 +155,20 @@ class DemoFixtures extends Fixture
             $trick = $trickRepository->findOneByTitle($imgData['titleTrick']);
             $image->setTrick($trick)
                 ->setCreatedAt(new \DateTime())
-                ->setPublish('1')
                 ->setSrc($imgData['src']);
             $manager->persist($image);    
         }
         $manager->flush();
 
         //add images Test
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $image = new Image;
             /** @var TrickRepository */
             $trickRepository = $manager->getRepository(Trick::class);
             $trick = $trickRepository->findOneByTitle('mute');
             $image->setTrick($trick)
                 ->setCreatedAt(new \DateTime())
-                ->setPublish('1')
-                ->setSrc('https://via.placeholder.com/150');
+                ->setSrc('https://via.placeholder.com/600');
             $manager->persist($image);    
         }
         $manager->flush();

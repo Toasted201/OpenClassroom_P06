@@ -28,11 +28,6 @@ class Image
     private $createdAt;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $publish;
-
-    /**
      * @ORM\Column(type="text")
      * @Groups({"get"})
      */
@@ -63,18 +58,6 @@ class Image
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getPublish(): ?bool
-    {
-        return $this->publish;
-    }
-
-    public function setPublish(bool $publish): self
-    {
-        $this->publish = $publish;
 
         return $this;
     }
