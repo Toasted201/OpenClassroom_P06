@@ -101,10 +101,9 @@
 
 {# Block Description #}
 {# Filtre : "Modifié le" affiché seulement si editAt existe #}
-<div class="container border my-5">
-    <p>Créé le  {{ trick.createdAt ? trick.createdAt|date('d-m-Y') : '' }} 
+<div class="container border pt-1 my-5">
+    <p>Créé le  {{ trick.createdAt ? trick.createdAt|date('d-m-Y') : '' }} dans la catégorie <b>{{ trick.category.title | upper }}</b>
     {% if trick.editedAt %} et modifé le {{ trick.editedAt ? trick.editedAt|date('d-m-Y') : '' }} </p> {% endif %} 
-    <p>Dans la catégorie <b>{{ trick.category.title | upper }}</b></p>
 
     <hr class="my-1">
 
@@ -122,7 +121,7 @@
             {{ form_row(commentForm.content, {
                 label: 'Laissez un commentaire :', value: ''}) 
             }}
-            <button type="submit" class="btn-primary">Envoyer</button>
+            <button type="submit" class="btn-primary">Valider</button>
         {{ form_end(commentForm) }}
         
     {% else %}
@@ -165,4 +164,12 @@
 
 </div>
   
+{% endblock %}
+
+{% block textJS %}
+<script>
+$('.carousel').carousel({
+  interval: 20000
+})
+</script>
 {% endblock %}

@@ -3,8 +3,9 @@
 }
 
 .carousel-inner img {
-    width: 100%;
-    height: auto;
+    max-height: 700px;
+    width : auto;
+    max-width: 1100px;
 }
 
 .carousel-control-prev-icon{
