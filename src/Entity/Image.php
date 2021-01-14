@@ -4,9 +4,13 @@ namespace App\Entity;
 
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
+ * @ORM\EntityListeners({"App\EntityListener\ImageListener"})
  */
 class Image
 {
@@ -14,6 +18,7 @@ class Image
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"get"})
      */
     private $id;
 
@@ -29,8 +34,15 @@ class Image
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"get"})
      */
     private $src;
+
+    /**
+     * @var UploadedFile|null
+     * @Assert\Image
+     */
+    private $file;
 
     /**
      * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="images")
@@ -89,5 +101,20 @@ class Image
         $this->trick = $trick;
 
         return $this;
+    }
+    /**
+     * @return UploadedFile|null
+     */
+    public function getFile(): ?UploadedFile
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param UploadedFile|null $file
+     */
+    public function setFile(?UploadedFile $file): void
+    {
+        $this->file = $file;
     }
 }

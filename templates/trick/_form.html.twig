@@ -22,61 +22,69 @@
     }) 
 }}
 
-
 <hr>
-{# PHOTOS #}
-<div class="row">
-    <div class="col">
+{# PHOTOS  #}
+<div class="d-flex justify-content-start mb-1">
+    <div class="mr-2">
         {{ form_label(formTrick.images, 'Images') }}
     </div>
-    <div>         
-        <button type="button"
-            class="add-another-collection-widget btn-sm btn-primary"
-            data-list-selector="">Ajouter une nouvelle image
-        </button>
-    </div>    
+    <button type="button"
+        class="add-another-collection-widget btn-sm btn-primary mr-2"
+        data-list-selector="#image-list"><i class="fas fa-plus"></i></button>
+    </button>
+    <button class="btn-sm btn-primary text-center d-lg-none" type="button" data-toggle="collapse" data-target="#collapseImage" aria-expanded="false"> {# Sur mobile, un bouton affichera les images pour les suppressions #}
+        Afficher la liste
+    </button> 
 </div>
-    
-<ul class="list-group px-1" id="imageSrc-fields-list"
+         
+<ul class="list-inline" id="image-list"
     data-prototype="{{ form_widget(formTrick.images.vars.prototype)|e }}"
     data-widget-tags="{{ '<li class="list-group-item"></li>'|e }}"
     data-widget-counter="{{ formTrick.images|length }}">
-{% for imageField in formTrick.images %}
-    {{ form_errors(imageField) }}
-    <li class="list-group-item px-1 d-flex justify-content-start align-items-top">
-        <div class="col-11 px-1">{{ form_widget(imageField) }}</div>
-        <a href="#" class="removeUrl"><i class="fas fa-trash btn btn-sm btn-warning"></i></a>
-    </li>
-{% endfor %}
+    <div class="collapse dont-collapse-sm  text-center" id="collapseImage">
+    {% for image in formTrick.images %}    
+        {{ form_errors(image) }}
+        <li class="list-inline-item image-list-miniature"> {# le browse est masqué quand il y a une image #}
+            {% if image.vars.data is not null and image.vars.data.src is not null %}
+            <img src="{{ asset(image.vars.data.src) }}" alt="" width="100" height="100">
+            {% endif %}
+            {{ form_widget(image) }}
+            <button type="button" class="btn btn-sm btn-warning collection-item-delete"><i class="fas fa-trash"></i></button>
+        </li>
+    {% endfor %}
+    </div>    
 </ul>
-{# PHOTOS #} 
+{# PHOTOS  #}
+
 
 <hr>
 {# VIDEOS #}
-<div class="row">
-    <div class="col">
+<div class="d-flex justify-content-start mb-1">
+    <div class="mr-2">
         {{ form_label(formTrick.videos, 'Vidéos') }}
-    </div>
-    <div>         
-        <button type="button"
-            class="add-another-collection-widget btn-sm btn-primary"
-            data-list-selector="#videoUrl-fields-list">Ajouter une nouvelle vidéo
-        </button>
-    </div>    
+    </div>       
+    <button type="button"
+        class="add-another-collection-widget btn-sm btn-primary mr-2"
+        data-list-selector="#video-list"><i class="fas fa-plus"></i></button>
+    </button>
+    <button class="btn-sm btn-primary text-center d-lg-none" type="button" data-toggle="collapse" data-target="#collapseVideo" aria-expanded="false"> {# Sur mobile, un bouton affichera les vidéos pour les suppressions #}
+        Afficher la liste
+    </button>  
 </div>
     
-{# store the prototype on the data-prototype attribute #}
-<ul class="list-group px-1" id="videoUrl-fields-list"
+<ul class="list-group px-1" id="video-list"
     data-prototype="{{ form_widget(formTrick.videos.vars.prototype)|e }}"
     data-widget-tags="{{ '<li class="list-group-item"></li>'|e }}"
     data-widget-counter="{{ formTrick.videos|length }}">
-{% for videoField in formTrick.videos %}
-    {{ form_errors(videoField) }}
-    <li class="list-group-item px-1 d-flex justify-content-start align-items-top">
-        <div class="col-11 px-1">{{ form_widget(videoField) }}</div>
-        <a href="#" class="removeUrl"><i class="fas fa-trash btn btn-sm btn-warning"></i></a>
-    </li>
-{% endfor %}
+    <div class="collapse dont-collapse-sm" id="collapseVideo">
+    {% for video in formTrick.videos %}
+        {{ form_errors(video) }}
+        <li class="list-group-item">
+            {{ form_widget(video) }}
+            <button type="button" class="btn btn-sm btn-warning collection-item-delete"><i class="fas fa-trash"></i></button>
+        </li>
+    {% endfor %}
+    </div>
 </ul>
 {# VIDEOS #}    
 
@@ -115,23 +123,22 @@ $(document).ready(function () {
         newElem.appendTo(list);
 
         // also add a remove button
-        newElem.append('<a href="#" class="remove-row"><i class="fas fa-window-close"></i></a>');    
-        // handle the removal
-        $('.remove-row').click(function(e) {
+        newElem.append('<button type="button" class="btn btn-sm btn-warning collection-item-delete"><i class="fas fa-trash"></i></button>');
+        newElem.find('.collection-item-delete').click(function(e) {
             e.preventDefault();          
             $(this).parent().remove();
             return false;
         });
-    });
-});
-    //cancel the add action
-    $(document).ready(function () {
-        $('.removeUrl').click(function (e) {
-            e.preventDefault();
-            $(this).parent().remove();
-            return false;
-        });
+        bsCustomFileInput.init();
     });    
 
+    //remove item button
+    $('.collection-item-delete').click(function(e) {
+        e.preventDefault();          
+        $(this).parent().remove();
+        return false;
+    });
+
+});    
 </script>
 {% endblock %}

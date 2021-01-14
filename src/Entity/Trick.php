@@ -212,6 +212,8 @@ class Trick
     {
         if (!$this->images->contains($image)) {
             $this->images[] = $image;
+            $image->setCreatedAt(new DateTime());
+            $image->setPublish(true);
             $image->setTrick($this);
         }
 
