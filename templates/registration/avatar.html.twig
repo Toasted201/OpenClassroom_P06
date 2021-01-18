@@ -15,16 +15,16 @@
 
         <p>Votre avatar actuel: </p>
         {% if user.userFilename is empty %}
-            <img src="https://eu.ui-avatars.com/api/?length=1&background=random&name={{ user.username }}" width="50px" height="50px">
+            <img src="https://eu.ui-avatars.com/api/?length=1&background=random&name={{ user.username }}" class="img-fluid" width="100px">
         {% else %}
-            <img src="/uploads/avatarUser/{{ user.userFilename }}" width="50px" height="50px">
+            <img src="/uploads/avatarUser/{{ user.userFilename }}" class="img-fluid" width="100px">
         {% endif %} 
 
         <hr>
    
         {{ form_start(form) }}
         {{ form_row(form.photo, {
-                label: 'Enregistrer un nouvel avatar :', value: ''}) 
+                label: 'Enregistrer un nouvel avatar:', value: ''}) 
             }}
 
         <button type="submit" class="btn-primary">Enregistrer</button>
