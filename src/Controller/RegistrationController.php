@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\AvatarFormType;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use App\Security\UserAuthenticator;
@@ -56,11 +57,12 @@ class RegistrationController extends AbstractController
                 // Move the file to the directory where brochures are stored
                 try {
                     $photoFile->move(
-                        $this->getParameter('photo_directory'),
+                        $this->getParameter('avatarAbsoluteDir'),
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // TODO... handle exception if something happens during file upload
+                    $this->addFlash('error','Votre nouvel avatar n\'a pas été enregistré');
+                    return $this->redirectToRoute('home');
                 }
 
                 // updates the 'brochureFilename' property to store the PNG file name
@@ -108,8 +110,50 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'user' => $user,
         ]);
     }
+
+    /**
+     * @Route("/avatar", name="app_avatar")
+     */
+    public function avatar(Request $request, SluggerInterface $slugger): Response
+    {
+        
+        $user = $this->getUser();
+        $form = $this->createForm(AvatarFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $photoFile */
+            $photoFile = $form->get('photo')->getData();
+            if ($photoFile) {
+                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$photoFile->guessExtension();
+                try {
+                    $photoFile->move(
+                        $this->getParameter('avatarAbsoluteDir'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    $this->addFlash('error','Votre nouvel avatar n\'a pas été enregistré');
+                    return $this->redirectToRoute('home');
+                }
+                $user->setUserFilename($newFilename);
+            }
+
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success','Votre nouvel avatar est enregistré');
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('registration/avatar.html.twig', [
+            'user' => $user,
+            'form' => $form->createView()
+        ]);
+    }
+
 
     /**
      * @Route("/verify/email/{validationToken}", name="app_verify_email")

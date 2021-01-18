@@ -35,6 +35,9 @@
                     <a class="nav-link" href="{{ path ('trick_new') }}">New Trick?</a> 
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ path ('app_avatar') }}">Avatar</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ path ('app_logout') }}">Se Déconnecter({{ app.user.username }})</a>
                 </li>
                     {% else %}
@@ -53,6 +56,7 @@
                 <a class="nav-link" href="{{ path ('trick_index') }}"><h3 class="fas fa-snowboarding"></h3></a>
                 {% if is_granted('ROLE_USER') %}
                     <a class="nav-link" href="{{ path ('trick_new') }}"><h3 class="far fa-plus-square"></h3></a>
+                    <a class="nav-link" href="{{ path ('app_avatar') }}"><h3 class="fas fa-user-alt"></h3></a>
                     <a class="nav-link" href="{{ path ('app_logout') }}"><h3 class="fas fa-sign-out-alt"></h3></a>
                 {% else %}    
                 <a class="nav-link" href="{{ path ('login') }}"><h3 class="fa fa-fw fa-user"></h3></a>

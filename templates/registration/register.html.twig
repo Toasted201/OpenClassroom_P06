@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-{% form_theme registrationForm 'bootstrap_4_layout.html.twig' %}
 
 {% block title %}S'inscrire
 {% endblock %}
@@ -9,7 +8,7 @@
 {% endblock %}
      
 {# Vous veillerez à envoyer un email permettant de valider la création de compte et rendre le compte actif (via un token de validation par exemple).
-{# TODO Il faut pouvoir associer un photo de profil #}
+{# Il faut pouvoir associer un photo de profil #}
 {# Une fois le formulaire soumis, l'utilisateur sera redirigé vers l'accueil sans être connecté #}
 
 {% block body %}
@@ -39,7 +38,6 @@
 {% endblock %}
 
 {% block textJS %}
-<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 <script>
     $(document).ready(function () {
         bsCustomFileInput.init()

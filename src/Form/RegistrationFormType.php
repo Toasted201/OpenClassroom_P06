@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -49,7 +50,7 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
             ])
             ->add('photo', FileType::class, [
-                    'label' => 'Photo de profil (au formt .jpeg ou .png)',
+                    'label' => 'Photo de profil',
     
                     // unmapped means that this field is not associated to any entity property
                     'mapped' => false,
@@ -61,14 +62,7 @@ class RegistrationFormType extends AbstractType
                     // unmapped fields can't define their validation using annotations
                     // in the associated entity, so you can use the PHP constraint classes
                     'constraints' => [
-                        new File([
-                            'maxSize' => '1024k',
-                            'mimeTypes' => [
-                                'image/png',
-                                'image/jpeg',
-                            ],
-                            'mimeTypesMessage' => 'Télécharger un fichier PNG ou JPEG valide ',
-                        ])
+                        new Image()
                     ],
             ]);
         }           
