@@ -119,7 +119,7 @@ class RegistrationController extends AbstractController
      */
     public function avatar(Request $request, SluggerInterface $slugger): Response
     {
-        
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->getUser();
         $form = $this->createForm(AvatarFormType::class, $user);
         $form->handleRequest($request);
