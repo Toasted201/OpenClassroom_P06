@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
@@ -25,7 +26,10 @@ class RegistrationFormType extends AbstractType
                 'label' => "Votre pseudo*"
             ])
             ->add('email', null, [
-                'label' => "Votre email*"
+                'label' => "Votre email*",
+                'constraints' => new Email([
+                    'message' => 'Veuillez saisir un email valide'
+                ]) 
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
