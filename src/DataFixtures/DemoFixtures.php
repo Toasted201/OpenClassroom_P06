@@ -40,36 +40,47 @@ class DemoFixtures extends Fixture
         $tricksData = [];
         $tricksData = [
             ['title' =>'mute',
+            'safeTitle' => 'mute',
             'description' => 'saisie de la carre frontside de la planche entre les deux pieds avec la main avant',
             'publish' => '1'],
             ['title' =>'sad',
+            'safeTitle' => 'sad',
             'description' => 'saisie de la carre backside de la planche, entre les deux pieds, avec la main avant',
             'publish'=> '1'],
             ['title' =>'indy',
+            'safeTitle' => 'indy',
             'description' => 'saisie de la carre frontside de la planche, entre les deux pieds, avec la main arrière',
             'publish'=> '1'],
             ['title' =>'stalefish',
+            'safeTitle' => 'stalefish',
             'description' => 'saisie de la carre backside de la planche entre les deux pieds avec la main arrière',
             'publish'=> '1'],            
             ['title' =>'tail grab',
+            'safeTitle' => 'tailgrab',
             'description' => 'saisie de la partie arrière de la planche, avec la main arrière',
             'publish'=> '1'],
             ['title' =>'nose grab',
+            'safeTitle' => 'nosegrab',
             'description' => 'saisie de la partie avant de la planche, avec la main avant',
             'publish'=> '1'],
             ['title' =>'japan',
+            'safeTitle' => 'japan',
             'description' => 'saisie de l\'avant de la planche, avec la main avant, du côté de la carre frontside.',
             'publish'=> '1'],
             ['title' =>'seat belt',
+            'safeTitle' => 'seatbelt',
             'description' => 'saisie du carre frontside à l\'arrière avec la main avant',
             'publish'=> '1'],
             ['title' =>'truck driver',
+            'safeTitle' => 'truckdriver',
             'description' => 'saisie du carre avant et carre arrière avec chaque main (comme tenir un volant de voiture)',
             'publish'=> '1'],
             ['title' =>'crail',
+            'safeTitle' => 'crail',
             'description' => 'La main arrière grab la carre front devant la fix avant. La jambe arrière doit etre tendue',
             'publish'=> '1'],
             ['title' =>'test',
+            'safeTitle' => 'test',
             'description' => 'description test',
             'publish'=> '0'],
         ]; 		
@@ -85,6 +96,7 @@ class DemoFixtures extends Fixture
         foreach ($tricksData as $trickData){           
             $trick = new Trick;
             $trick->setTitle($trickData['title'])
+                ->setSafeTitle($trickData['safeTitle'])
                 ->setDescription($trickData['description'])
                 ->setPublish($trickData['publish'])
                 ->setCreatedAt($date)
@@ -99,6 +111,7 @@ class DemoFixtures extends Fixture
         for ($i = 0; $i < 20; $i++) {
             $trickTest = new Trick();
             $trickTest->setTitle('Titre ' . $i)
+                    ->setSafeTitle('safeTitre' . $i)
                     ->setDescription('description ' .  $i)
                     ->setPublish('1')
                     ->setCreatedAt($date)

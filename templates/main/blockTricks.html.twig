@@ -3,10 +3,10 @@
         <div class="card border-primary shadow my-3">
 
             <div class="card-header px-2">
-                <a href="{{ path('trick_show', {'id': trick.id}) }}"><h7 class="card-title">{{ trick.title | upper }} </h7></a>
+                <a href="{{ path('trick_show', {'safeTitle': trick.safeTitle}) }}"><h7 class="card-title">{{ trick.title | upper }} </h7></a>
                 <div>
                 {% if is_granted('ROLE_USER') %} {# les boutons edit and delete ne sont affichés que si l'utilisateur est connecté #}
-                    <a href="{{ path('trick_edit', {'id': trick.id}) }}">
+                    <a href="{{ path('trick_edit', {'safeTitle': trick.safeTitle}) }}">
                         <button class="btn btn-success btn-sm buttonCard"><i class="far fa-edit"></i></button>
                     </a>
                     {{ include('trick/_delete_form.html.twig') }}  {# le bouton de suppression n'affiche pas de page spécifique, mais une fenêtre modale demande si l'utlisateur est sûr de vouloir supprimer ce trick #}

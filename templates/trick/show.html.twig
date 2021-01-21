@@ -20,7 +20,7 @@
 
         {% if is_granted('ROLE_USER') %} 
             <div class="col-1">
-                <a href="{{ path('trick_edit', {'id': trick.id}) }}">
+                <a href="{{ path('trick_edit', {'safeTitle': trick.safeTitle}) }}">
                     <button class="btn btn-success btn-sm buttonCard"><i class="far fa-edit"></i></button>
                 </a>
             </div>    
@@ -156,10 +156,10 @@
     {# pagination commentaire #} {# https://symfony.com/doc/current/the-fast-track/fr/10-twig.html#paginating-the-comments #}
         <hr my-1>
         {% if previous >= 0 %}
-            <a href="{{ path('trick_show', {'id': trick.id, offset: previous}) }}"><i class="fas fa-backward shadow-sm p-3 mb-5 bg-white rounded"></i></a> 
+            <a href="{{ path('trick_show', {'safeTitle': trick.safeTitle, offset: previous}) }}"><i class="fas fa-backward shadow-sm p-3 mb-5 bg-white rounded"></i></a> 
         {% endif %}
         {% if next < comments|length %}
-            <a href="{{ path('trick_show', {'id': trick.id, offset: next }) }}"><i class="fas fa-forward shadow-sm p-3 mb-5 bg-white rounded"></i></a>
+            <a href="{{ path('trick_show', {'safeTitle': trick.safeTitle, offset: next }) }}"><i class="fas fa-forward shadow-sm p-3 mb-5 bg-white rounded"></i></a>
         {% endif %}
 
 </div>
