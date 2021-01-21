@@ -45,6 +45,17 @@ class ImageListener
         $this->upload($image);
     }
 
+    /** @param Image $image
+    */
+   public function preRemove(Image $image): void
+   {
+        if (strpos($image->getSrc(),$this->imageDir) == 0) //On vérifie si src contient imageDir
+        {
+            $path=substr($image->getSrc(),strlen($this->imageDir)+1); //on extrait le filename
+            @unlink(sprintf("%s/%s",$this->imageAbsoluteDir,$path)); //on génère le chemin absolue + on supprime le fichier avc unlink (@pour ne pas générer d'erreur)
+        }
+   }
+
     /**
      * @param Image $image
      */
@@ -56,4 +67,4 @@ class ImageListener
             $image->setSrc(sprintf("%s/%s",$this->imageDir, $filename));
         }
     }
-}
+}    
