@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid w-75 my-5 py-3 border">
+        <div class="text-center">
+            <h1>Accès Interdit</h1>
+            
+            <img src="\img\oops.png" alt="oops" width="200px">
+
+            <p class="text-center">
+                <a href="{{ path('home') }}">Rendez-vous sur la page d'accueil pour poursuivre votre visite.</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}
