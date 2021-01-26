@@ -21,6 +21,7 @@
         "symfony/framework-bundle": "5.2.*",
         "symfony/http-client": "5.2.*",
         "symfony/intl": "5.2.*",
+        "symfony/lock": "5.2.*",
         "symfony/mailer": "5.2.*",
         "symfony/mime": "5.2.*",
         "symfony/monolog-bundle": "^3.1",
@@ -43,8 +44,8 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
-        "symfony/browser-kit": "^5.2",
-        "symfony/css-selector": "^5.2",
+        "symfony/browser-kit": "5.2.*",
+        "symfony/css-selector": "5.2.*",
         "symfony/debug-bundle": "^5.2",
         "symfony/maker-bundle": "^1.0",
         "symfony/phpunit-bridge": "^5.2",
