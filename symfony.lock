@@ -281,6 +281,18 @@
     "symfony/intl": {
         "version": "v5.1.8"
     },
+    "symfony/lock": {
+        "version": "5.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.2",
+            "ref": "13350583a83fa636bf45a5fb62da3bdc73be52a1"
+        },
+        "files": [
+            "./config/packages/lock.yaml"
+        ]
+    },
     "symfony/mailer": {
         "version": "4.3",
         "recipe": {
@@ -342,12 +354,12 @@
         "version": "v2.0.0"
     },
     "symfony/phpunit-bridge": {
-        "version": "4.3",
+        "version": "5.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
-            "version": "4.3",
-            "ref": "6d0e35f749d5f4bfe1f011762875275cd3f9874f"
+            "version": "5.1",
+            "ref": "cb82a2355ec62fef0e7028ac969fe86fa722feb8"
         },
         "files": [
             "./.env.test",
@@ -391,6 +403,9 @@
     },
     "symfony/property-info": {
         "version": "v5.1.8"
+    },
+    "symfony/rate-limiter": {
+        "version": "v5.2.1"
     },
     "symfony/routing": {
         "version": "5.1",

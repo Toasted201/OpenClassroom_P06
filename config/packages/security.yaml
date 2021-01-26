@@ -1,4 +1,5 @@
 security:
+    enable_authenticator_manager: true
     encoders:
         App\Entity\User:
             algorithm: auto
@@ -15,7 +16,8 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: true
+            security: true
+            #anonymous: true
             lazy: true
             provider: app_user_provider
             guard:
@@ -32,8 +34,25 @@ security:
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
+            # allow authentication using a form or HTTP basic
+            form_login: ~
+            http_basic: ~
+
+            # configure the form authentication as the entry point for unauthenticated users
+            entry_point: form_login
+
+            # TODO configuring the maximum login attempts (per minute)
+            ##login_throttling:
+                ##max_attempts: 2
+
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        
+        # allow unauthenticated users to access the login form
+        - { path: ^/security/login, roles: PUBLIC_ACCESS }
+
+        # but require authentication for all other admin routes
+        - { path: ^/admin, roles: ROLE_ADMIN }

@@ -12,6 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
  * @UniqueEntity("title", message="Une fiche porte déjà ce nom")
+ * @UniqueEntity("safeTitle", message="Une fiche porte déjà ce nom")
  */
 class Trick
 {
@@ -26,6 +27,11 @@ class Trick
      * @ORM\Column(type="string", length=255)
      */
     private $title;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $safeTitle;
 
     /**
      * @ORM\Column(type="text")
@@ -94,6 +100,18 @@ class Trick
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getSafeTitle(): ?string
+    {
+        return $this->safeTitle;
+    }
+
+    public function setSafeTitle(string $safeTitle): self
+    {
+        $this->safeTitle = $safeTitle;
 
         return $this;
     }

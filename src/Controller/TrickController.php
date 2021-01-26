@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Twig\Environment;
 
 /**
@@ -35,7 +36,7 @@ class TrickController extends AbstractController
     /**
      * @Route("/new", name="trick_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, SluggerInterface $slugger): Response
     {
         $user = $this->getUser();
         $trick = new Trick();
@@ -45,6 +46,8 @@ class TrickController extends AbstractController
         if ($formTrick->isSubmitted() && $formTrick->isValid()) {
             $trick->setCreatedAt(new DateTime());
             $trick->setUser($user);
+            $safeTitle=$slugger->slug($trick->getTitle());
+            $trick->setSafeTitle($safeTitle);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($trick);
@@ -62,7 +65,7 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="trick_show", methods={"GET", "POST"})
+     * @Route("/{safeTitle}", name="trick_show", methods={"GET", "POST"})
      */
     public function show(Request $request, Environment $twig, CommentRepository $commentRepo, Trick $trick): Response
     {
@@ -85,7 +88,7 @@ class TrickController extends AbstractController
             $entityManager->persist($comment);
             $entityManager->flush();
             return $this->redirectToRoute('trick_show', [
-                'id' => $trick->getId()
+                'safeTitle' => $trick->getSafeTitle()
             ]);
         }
         
@@ -103,18 +106,21 @@ class TrickController extends AbstractController
 
 
     /**
-     * @Route("/{id}/edit", name="trick_edit", methods={"GET","POST"})
+     * @Route("/{safeTitle}/edit", name="trick_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Trick $trick): Response
+    public function edit(Request $request, Trick $trick, SluggerInterface $slugger): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $formTrick = $this->createForm(TrickType::class, $trick);
         $formTrick->handleRequest($request);
 
         if ($formTrick->isSubmitted() && $formTrick->isValid()) {
+            $safeTitle=$slugger->slug($trick->getTitle());
+            $trick->setSafeTitle($safeTitle);
+
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('trick_edit',['id' => $trick->getId()]);
+            return $this->redirectToRoute('trick_edit',['safeTitle' => $trick->getSafeTitle()]);
         }
 
         return $this->render('trick/edit.html.twig', [
