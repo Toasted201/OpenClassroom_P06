@@ -106,7 +106,7 @@
         "version": "1.1.1"
     },
     "monolog/monolog": {
-        "version": "2.1.1"
+        "version": "2.2.0"
     },
     "nikic/php-parser": {
         "version": "v4.10.2"
@@ -306,7 +306,7 @@
         "version": "v5.1.8"
     },
     "symfony/monolog-bridge": {
-        "version": "v5.1.8"
+        "version": "v5.2.1"
     },
     "symfony/monolog-bundle": {
         "version": "3.3",
