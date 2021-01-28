@@ -7,6 +7,7 @@ use App\Form\AvatarFormType;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use App\Security\UserAuthenticator;
+use App\Service\AvatarService;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -23,6 +24,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Uid\Uuid;
 
 
+
 class RegistrationController extends AbstractController
 {
     public function __construct()
@@ -32,7 +34,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer, SluggerInterface $slugger): Response
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer, SluggerInterface $slugger,  AvatarService $avatarService): Response
     {
         $user = new User();
         $date = new \DateTime();
@@ -42,42 +44,20 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             
-        //upload photo
+            //upload photo
             /** @var UploadedFile $photoFile */
             $photoFile = $form->get('photo')->getData();
-
-            // this condition is needed because the 'photo' field is not required
-            // so the PNG file must be processed only when a file is uploaded
-            if ($photoFile) {
-                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$photoFile->guessExtension();
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $photoFile->move(
-                        $this->getParameter('avatarAbsoluteDir'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    $this->addFlash('error','Votre nouvel avatar n\'a pas été enregistré');
-                    return $this->redirectToRoute('home');
-                }
-
-                // updates the 'brochureFilename' property to store the PNG file name
-                // instead of its contents
-                $user->setUserFilename($newFilename);
-            }
+            $newFilename = $avatarService->uploadAvatar($photoFile);
+            $user->setUserFilename($newFilename);
                        
             // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
                     $form->get('plainPassword')->getData()
-                )
-               
+                )               
             );
+            
             $user->setCreatedAt($date);
             $user->setValidationToken($validationToken);
 
@@ -117,7 +97,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/avatar", name="app_avatar")
      */
-    public function avatar(Request $request, SluggerInterface $slugger): Response
+    public function avatar(Request $request, AvatarService $avatarService): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->getUser();
@@ -127,21 +107,8 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $photoFile */
             $photoFile = $form->get('photo')->getData();
-            if ($photoFile) {
-                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$photoFile->guessExtension();
-                try {
-                    $photoFile->move(
-                        $this->getParameter('avatarAbsoluteDir'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    $this->addFlash('error','Votre nouvel avatar n\'a pas été enregistré');
-                    return $this->redirectToRoute('home');
-                }
-                $user->setUserFilename($newFilename);
-            }
+            $newFilename = $avatarService->uploadAvatar($photoFile);
+            $user->setUserFilename($newFilename);
 
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success','Votre nouvel avatar est enregistré');
