@@ -13,7 +13,7 @@
     
         <h1>Modifier votre photo de profil</h1>
 
-        <p>Votre avatar actuel: </p>
+        <p>({{ user.username }}) Votre avatar actuel: </p>
         {% if user.userFilename is empty %}
             <img src="https://eu.ui-avatars.com/api/?length=1&background=random&name={{ user.username }}" class="img-fluid" width="100px">
         {% else %}
