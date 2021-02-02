@@ -9,6 +9,8 @@ use App\Form\CommentFormType;
 use App\Form\TrickType;
 use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
+use App\Service\NewCommentHandler;
+use App\Service\NewTrickHandler;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,57 +38,29 @@ class TrickController extends AbstractController
     /**
      * @Route("/new", name="trick_new", methods={"GET","POST"})
      */
-    public function new(Request $request, SluggerInterface $slugger): Response
-    {
-        $user = $this->getUser();
-        $trick = new Trick();
-        $formTrick = $this->createForm(TrickType::class, $trick);
-        $formTrick->handleRequest($request);
-
-        if ($formTrick->isSubmitted() && $formTrick->isValid()) {
-            $trick->setCreatedAt(new DateTime());
-            $trick->setUser($user);
-            $safeTitle=$slugger->slug($trick->getTitle());
-            $trick->setSafeTitle($safeTitle);
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($trick);
-            $entityManager->flush();
-
-            $this->addFlash('success','Nouveau trick enregistré');
-
+    public function new(NewTrickHandler $newTrickHandler): Response
+    { 
+        $trick= new Trick;
+        if ($newTrickHandler->process()) {
             return $this->redirectToRoute('trick_index');
         }
-
+ 
         return $this->render('trick/new.html.twig', [
             'trick' => $trick,
-            'formTrick' => $formTrick->createView(),
+            'formTrick' => $newTrickHandler->getForm()->createView(),
         ]);
     }
 
     /**
      * @Route("/{safeTitle}", name="trick_show", methods={"GET", "POST"})
      */
-    public function show(Request $request, Environment $twig, CommentRepository $commentRepo, Trick $trick): Response
+    public function show(Request $request, NewCommentHandler $newCommentHandler, CommentRepository $commentRepo, Trick $trick): Response
     {
-        $publish=$trick->getPublish();
-        if (!$publish) {
+        if (!$trick->getPublish()) {
         return $this->redirectToRoute('home'); /*Retour sur la page d'accueil si le trick demandé n'est pas publié*/
         }
         
-        $user = $this->getUser();
-        $comment = new Comment();
-        $form = $this->createForm(CommentFormType::class, $comment);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $comment->setTrick($trick);
-            $comment->setUser($user);
-            $comment->setCreatedAt(new DateTime());
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($comment);
-            $entityManager->flush();
+        if ($newCommentHandler->process($trick)) {
             return $this->redirectToRoute('trick_show', [
                 'safeTitle' => $trick->getSafeTitle()
             ]);
@@ -97,7 +71,7 @@ class TrickController extends AbstractController
 
         return $this->render('trick/show.html.twig', [
                 'trick' => $trick,
-                'commentForm' => $form->createView(),
+                'commentForm' => $newCommentHandler->getForm()->createView(),
                 'comments' => $paginator,
                 'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
                 'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
