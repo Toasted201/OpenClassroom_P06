@@ -2,16 +2,12 @@
 
 namespace App\Service;
 
-use App\Entity\Comment;
 use App\Entity\User;
-use App\Form\CommentFormType;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mime\Address;
@@ -20,8 +16,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class UserService extends AbstractController
+class UserService
 {
     protected $requestStack;
     protected $form;
@@ -30,6 +28,9 @@ class UserService extends AbstractController
     protected $currentUser;
     protected $tokenStorageInterface;
     protected $passwordEncoder;
+    protected $slugger;
+    protected $router;
+    protected $container;
  
     public function __construct(
         RequestStack $requestStack, 
@@ -37,7 +38,10 @@ class UserService extends AbstractController
         FormFactoryInterface $formFactory, 
         EntityManagerInterface $entityManager, 
         MailerInterface $mailerInterface, 
-        UserPasswordEncoderInterface $passwordEncoder)
+        UserPasswordEncoderInterface $passwordEncoder,
+        SluggerInterface $slugger,
+        UrlGeneratorInterface $router,
+        ContainerInterface $container)
 
     {
         $this->requestStack = $requestStack;
@@ -46,6 +50,9 @@ class UserService extends AbstractController
         $this->formFactory = $formFactory;
         $this->mailerInterface = $mailerInterface;
         $this->passwordEncoder = $passwordEncoder;
+        $this->slugger = $slugger;
+        $this->router = $router;
+        $this->container = $container;  
     }
  
  
@@ -80,23 +87,21 @@ class UserService extends AbstractController
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        //Création d'une url contenant le token    
-        $url = $this->generateUrl('app_reset_password', ['resetToken'=>$resetToken], UrlGeneratorInterface::ABSOLUTE_URL);
-
-        //envoie de l'e-mail
-        $email = (new TemplatedEmail())
-        ->from(new Address('julie@helixsi.com', 'SnowTricks'))
-        ->to($user->getEmail())
-        ->subject('Votre demande de nouveau mot de passe')
-        ->htmlTemplate('reset_password/email.html.twig')
-        ->context([
-            'url' => $url,
-            'resetLifeTime' => $resetLifeTime,
-        ])
-        ;
-        $this->mailerInterface->send($email);
+        
+        $url = $this->router->generate('app_reset_password', ['resetToken'=>$resetToken], UrlGeneratorInterface::ABSOLUTE_URL);
+        $to = $user;
+        $subjectEmail = 'Votre demande de nouveau mot de passe';
+        $htmlTemplate ='reset_password/email.html.twig';
+        $context=[];
+        $context['url']=$url;
+        $context['resetLifeTime']=$resetLifeTime;
+        $this->sendEmail($to, $subjectEmail, $htmlTemplate, $context);       
     }
 
+    /**
+     * Vérification péremption token
+     * @throws Exception
+     */
     public function isTokenPerempted($user)
     {
         $resetLifeTime=$user->getResetLifeTime();
@@ -104,8 +109,24 @@ class UserService extends AbstractController
         if ($resetLifeTime < $now){
             throw new Exception("TokenPerempted");
         }
-    }    
+    }
+    
+    
+    /**
+     * Validation Email
+     * @throws Exception
+     */
+    public function emailValidation($user)
+    {       
+        $user->setIsVerified(true);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush(); 
+    }
 
+
+    /**
+     * Création nouveau mot de passe
+     */
     public function newPassword($form, $user)
     {
         $plainPassword = $form->get('plainPassword')->getData();
@@ -116,4 +137,64 @@ class UserService extends AbstractController
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
+
+    /**
+     * Upload photo de profil
+     * @throws Exception
+     */
+    public function uploadAvatar($form, $user)
+    {
+        $photoFile = $form->get('photo')->getData();
+        $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeFilename=$this->slugger->slug($originalFilename);
+        $newFilename = $safeFilename.'-'.uniqid().'.'.$photoFile->guessExtension();
+        $photoFile->move(
+                $this->container->getParameter('avatarAbsoluteDir'),
+                $newFilename
+            );
+        $user->setUserFilename($newFilename);
+        
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();              
+    }  
+
+    /**
+     * New User
+     * @throws Exception
+     */
+    public function newUser($form, $user)
+    {       
+        $plainPassword = $form->get('plainPassword')->getData();
+        $password = $this->passwordEncoder->encodePassword($user,$plainPassword);
+        $user->setPassword($password);
+                          
+        $user->setCreatedAt(new DateTime());
+
+        $user->setValidationToken(Uuid::v4());
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        $this->uploadAvatar($form,$user);
+
+        $url = $this->router->generate('app_verify_email', ['validationToken'=>$user->getValidationToken()], UrlGeneratorInterface::ABSOLUTE_URL);
+        $to = $user;
+        $subjectEmail = 'Confirmez votre Email';
+        $htmlTemplate ='registration/confirmation_email.html.twig';
+        $context=[];
+        $context['url']=$url;
+        $this->sendEmail($to, $subjectEmail, $htmlTemplate, $context);
+    }
+    
+    public function sendEmail($to, $subjectEmail, $htmlTemplate, $context)
+    {        
+        $email = (new TemplatedEmail())
+            ->from(new Address('julie@helixsi.com', 'SnowTricks'))
+            ->to($to->getEmail())
+            ->subject($subjectEmail)
+            ->htmlTemplate($htmlTemplate)
+            ->context($context)
+        ;
+        $this->mailerInterface->send($email);
+    }    
 }
