@@ -9,11 +9,23 @@ use App\Entity\User;
 use App\Entity\Video;
 use App\Repository\CategoryRepository;
 use App\Repository\TrickRepository;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class DemoFixtures extends Fixture
 {    
+        protected $passwordEncoder;
+
+ 
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+ 
+    
     public function load(ObjectManager $manager)
     {
         //create categories
@@ -28,13 +40,16 @@ class DemoFixtures extends Fixture
 
         //add first user
         $userTest = new User();
+        $password = $this->passwordEncoder->encodePassword($userTest,'passpass');
         $userTest->setUsername('BobDoe')
         ->setEmail('bob@doe.com')
-        ->setPassword('pass')
+        ->setPassword($password)
         ->setRoles([])
         ->setIsVerified('1')
-        ->setCreatedAt(new \DateTime());
+        ->setCreatedAt(new DateTime());
         $manager->persist($userTest);
+
+        
 
         //add Tricks Demo
         $tricksData = [];
@@ -135,7 +150,7 @@ class DemoFixtures extends Fixture
             $trick = $trickRepository->findOneByTitle($videoData['title']);
             $video->setTrick($trick)
                 ->setUrl($videoData['url'])
-                ->setCreatedAt(new \DateTime());
+                ->setCreatedAt(new DateTime());
             $manager->persist($video);    
         }
         $manager->flush();
