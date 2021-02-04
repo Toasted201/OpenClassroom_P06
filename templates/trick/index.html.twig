@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SnowTricks : Liste {% endblock %}
+
+{% block body %}
+    <h1>Liste des Tricks</h1>
+
+    {% for flashSuccess in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ flashSuccess }}</div>
+    {% endfor %}
+    
+    {% for flashError in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Créé le</th>
+                {% if is_granted('ROLE_USER') %}
+                    <th>Publié</th>
+                    <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for trick in tricks %}
+            <tr>
+            {% if is_granted('ROLE_USER') %}
+                <td><a href="{{ path('trick_show', {'safeTitle': trick.safeTitle}) }}"><h7 class="card-title">{{ trick.title | upper }} </h7></a></td>
+                <td>{{ trick.description | capitalize  }}</td>
+                <td>{{ trick.createdAt ? trick.createdAt|date('d/m/Y') : '' }}</td>
+                <td>{{ trick.publish ? 'Yes' : 'No' }} </td>
+                <td><a href="{{ path('trick_edit', {'safeTitle': trick.safeTitle}) }}"><button class="btn btn-success btn-sm buttonCard"><i class="far fa-edit"></i></button></a>                         
+                    {{ include('trick/_delete_form.html.twig') }}    
+                </td>   
+            {% else %}
+                {% if trick.publish %}
+                <td><a href="{{ path('trick_show', {'safeTitle': trick.safeTitle}) }}"><h7 class="card-title">{{ trick.title | upper }} </h7></a></td>
+                <td>{{ trick.description | capitalize  }}</td>
+                <td>{{ trick.createdAt ? trick.createdAt|date('d/m/Y') : '' }}</td>
+                {% endif %}
+            {% endif %}    
+            </tr>            
+        {% else %}
+            <tr>
+                <td colspan="7">No tricks</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

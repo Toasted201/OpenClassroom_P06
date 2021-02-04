@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier sa photo de profil
+{% endblock %}
+     
+
+{% block body %}
+    {% for flashError in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
+    <div class="container w-75 my-5 py-3 border">
+    
+        <h1>Modifier votre photo de profil</h1>
+
+        <p>({{ user.username }}) Votre avatar actuel: </p>
+        {% if user.userFilename is empty %}
+            <img src="https://eu.ui-avatars.com/api/?length=1&background=random&name={{ user.username }}" class="img-fluid" width="100px">
+        {% else %}
+            <img src="/uploads/avatarUser/{{ user.userFilename }}" class="img-fluid" width="100px">
+        {% endif %} 
+
+        <hr>
+   
+        {{ form_start(form) }}
+        {{ form_row(form.photo, {
+                label: 'Enregistrer un nouvel avatar:', value: ''}) 
+            }}
+
+        <button type="submit" class="btn-primary">Enregistrer</button>
+      
+        {{ form_end(form) }}
+  
+    </div>
+
+{% endblock %}
+
+{% block textJS %}
+<script>
+    $(document).ready(function () {
+        bsCustomFileInput.init()
+    })
+</script>
+{% endblock %}

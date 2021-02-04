@@ -1,0 +1,80 @@
+html {
+    scroll-behavior: smooth;
+  }
+
+.imageAccueil { 
+    position : relative ;
+    opacity: 0.8;
+}
+
+.accrocheAccueil {
+    position : absolute;
+    bottom: 60%;
+    right: 10%;
+    font-size: 7vw;
+    color : #d3b82d;
+    opacity: 0.9;
+}
+
+
+.buttonDown {
+    position : absolute;
+	bottom: 10px;
+    right: 15px;
+}
+
+.buttonUp {
+    position: fixed;
+    bottom: 70px;
+    right: 15px;
+}
+
+.buttonCard {
+    float:right;
+}
+
+  /* Load more */
+.load-more{
+    width: 10%;
+    background: #15a9ce;
+    text-align: center;
+    color: white;
+    padding: 10px 0px;
+    font-family: sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.load-more:hover{
+    cursor: pointer;
+}
+
+/* forcer 5 colonnes */
+.col-5cols,
+.col-sm-5cols,
+.col-md-5cols,
+.col-lg-5cols,
+.col-xl-5cols {
+    position: relative;
+    width: 100%;
+    min-height: 50px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.col-5cols {
+    width: 20%;
+}
+
+@media (max-width: 992px) {
+    .col-lg-5cols {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 540px) {
+    .col-sm-5cols {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}

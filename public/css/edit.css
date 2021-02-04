@@ -1,0 +1,27 @@
+.image-list-miniature .form-group{
+    display: none;
+}
+
+.image-list-miniature{
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    max-width: 150;
+    height: auto;
+    text-align: center;
+    position: relative;
+}
+
+.image-list-miniature button{
+    position : absolute;
+	top: 10px;
+    right: 10px;
+}    
+
+@media (min-width: 992px)
+{
+    .collapse.dont-collapse-sm{
+        display : block;
+        visibility: visible;
+    }
+}

@@ -1,0 +1,46 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}SnowTricks_Connexion
+{% endblock %}
+{% block metaName %}SnowTricks Connexion
+{% endblock %}
+{% block metaContent %}Connexion
+{% endblock %}
+
+{% block body %}
+<div class="container w-75 my-5 py-3 border">
+    <h1 class="h3 mb-3 font-weight-normal">Connectez vous</h1>
+
+    <form method="post">
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        {% if app.user %}
+            <div class="mb-3">
+                Vous êtes connecté en tant que {{ app.user.username }}. <a href="{{ path('app_logout') }}">Déconnectez vous</a>
+            </div>
+        {% endif %}
+
+        <label for="inputName">Pseudo</label>
+        <input type="text" value="{{ last_username }}" name="username" id="inputName" class="form-control" required autofocus>
+        <label for="inputPassword">Mot de passe</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" required>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" >
+
+        <button class="btn btn btn-primary" type="submit">Valider</button>
+    </form>
+    
+    <a href="{{ path('app_forgot_password_request') }} "><h7>Mot de passe oublié ?</h7></a>
+</div>
+
+<div class="row h-100 justify-content-center align-items-center">
+    <a href="{{ path('app_register') }} "><button class="btn btn-success">Pas encore de compte ? Inscrivez-vous</button></a>
+</div>            
+
+{% endblock %}
+
+
+

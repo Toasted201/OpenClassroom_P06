@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Snowtricks_Edit {{ trick.title |capitalize }}
+{% endblock %}
+{% block metaName %}SnowTricks {{ trick.title }}
+{% endblock %}
+{% block metaContent %}Modification {{ trick.title |capitalize }}
+{% endblock %}
+{% block stylesheet %}/css/edit.css
+{% endblock %}
+
+{% block body %}
+
+{# La page ne doit être accessible que si l'utlisateur est connecté + Seul un utilisateur connecté peut update #}
+
+{# TODO Option : Mettre une image de fond sur toute la largeur de la page #}
+
+<div class="container mt-5 px-auto border">  
+    
+    <div class="row justify-content-space-around">
+        <div class="col"><h4>Page de modification de la fiche : <a href="{{ path('trick_show', {'safeTitle': trick.safeTitle}) }}">{{ trick.title | upper }}</a></h4></div>
+        <div>{{ include('trick/_delete_form.html.twig') }}</div>
+    </div>    
+ 
+    {{ include('trick/_form.html.twig', {'button_label': 'Enregistrer les modifications'}) }}
+</div>
+
+{% endblock %}

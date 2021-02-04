@@ -1,0 +1,175 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SnowTricks_{{ trick.title |capitalize }}
+{% endblock %}
+{% block metaName %}Trick {{ trick.title |capitalize }}
+{% endblock %}
+{% block metaContent %}SnowTricks_{{ trick.title |capitalize }}
+{% endblock %}
+{% block stylesheet %}/css/galery.css
+{% endblock %}
+{% block body %}
+  
+{# Entête #}
+{# les boutons edit and delete ne sont affichés que si l'utilisateur est connecté #}
+<div class="container my-2 border">  
+    <div class="row align-items-center">
+        <div class="col-10">
+            <h1>{{ trick.title | upper }}</h1>
+        </div>
+
+        {% if is_granted('ROLE_USER') %} 
+            <div class="col-1">
+                <a href="{{ path('trick_edit', {'safeTitle': trick.safeTitle}) }}">
+                    <button class="btn btn-success btn-sm buttonCard"><i class="far fa-edit"></i></button>
+                </a>
+            </div>    
+            <div>    
+                {{ include('trick/_delete_form.html.twig') }}
+            </div>     
+        {% endif %}
+    </div>         
+</div>
+
+{# Galerie #}
+{# L'image "à la une" = la première image ajoutée  #}
+{# Si aucune image n'a été ajoutée, vous veillerez à mettre une image par défaut #}
+{# Sur mobile, les miniatures seront cachées. Un bouton permettra de déployer une liste = data-toggle collapse + css dont-collapse sur mobile & masquer bouton sur lg) #}
+<div class="container border">
+    {% if trick.images is empty and trick.videos is empty %} 
+            <img src="\img\default.png" class="img-fluid" alt="image par défaut">
+    {% else %}
+    <div id="carouselTrick" class="carousel" data-ride="carousel">
+        <div class="carousel-inner d-flex align-items-center">                     
+            {% for image in trick.images %}
+                <div class="carousel-item{% if loop.first %} active {% endif %}">   
+                    <img class="d-block mx-auto img-responsive" src="{{ image.src }}" alt="">
+                </div>
+            {% endfor %}
+            {% for video in trick.videos %}
+                <div class="carousel-item{% if trick.images is empty and loop.first %} active {% endif %}">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="{{ video.url }}" allowfullscreen></iframe>
+                    </div>
+                </div>
+            {% endfor %}       
+        </div>
+       
+        <div class="carousel-indicators d-block mx-auto "> {#TODO Option : modifier le design de la scroll barre#}                  
+            <div class="col text-center my-1">
+                <button class="btn btn-primary text-center d-lg-none" type="button" data-toggle="collapse" data-target="#collapseIndicators" aria-expanded="false">
+                    Plus de photos
+                </button>
+            </div>
+            <div class="collapse dont-collapse-sm" id="collapseIndicators">
+                <div id="carouselIndicators" class="carousel slide" data-ride="carousel">
+                    {% set i = 0 %}
+                    <div class="scrolling-wrapper row flex-row flex-nowrap mt-2 pb-2">
+                        {% for image in trick.images %}
+                            <div class="col-2" data-target="#carouselTrick" data-slide-to="{{ i }}">
+                                <img src="{{ image.src }}" class="img-fluid" alt="">
+                            </div> 
+                            {% set i = i + 1 %}             
+                        {% endfor %}
+                        {% set v = i %}
+                        {% for video in trick.videos %}
+                            {% set urlParts = ( video.url |split('embed/',2)) %}
+                            {% set urlId = urlParts[1] %}                            
+                            <div class="col-2" data-target="#carouselTrick" data-slide-to="{{ v }}">                              
+                                <img src="http://i3.ytimg.com/vi/{{ urlId }}/hqdefault.jpg" class="img-fluid" alt="">{#  afficher une miniature pour chaque vidéo #}
+                            </div>
+                            {% set v = v + 1 %} 
+                        {% endfor %}               
+                    </div>    
+                </div>     
+            </div>
+        </div>
+
+        {% if v > 1 %}
+        <a class="carousel-control-prev" href="#carouselTrick" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselTrick" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+        {% endif %}  
+    </div>
+    {% endif %}
+</div>
+
+{# Block Description #}
+{# Filtre : "Modifié le" affiché seulement si editAt existe #}
+<div class="container border pt-1 my-5">
+    <p>Créé le  {{ trick.createdAt ? trick.createdAt|date('d-m-Y') : '' }} dans la catégorie <b>{{ trick.category.title | upper }}</b>
+    {% if trick.editedAt %} et modifé le {{ trick.editedAt ? trick.editedAt|date('d-m-Y') : '' }} </p> {% endif %} 
+
+    <hr class="my-1">
+
+    <p><h5>Description :</h5> {{ trick.description | capitalize }}</p>
+</div>
+
+{# Block Commentaire #}
+<div class="container my-5 px-auto border">
+
+    {# formulaire d'ajout commentaire #}
+    {% if is_granted('ROLE_USER') %} {# n'est affiché que si l'utilisateur est connecté #}
+        
+        
+        {{ form_start(commentForm) }}
+            {{ form_row(commentForm.content, {
+                label: 'Laissez un commentaire :', value: ''}) 
+            }}
+            <button type="submit" class="btn-primary">Valider</button>
+        {{ form_end(commentForm) }}
+        
+    {% else %}
+        <a href="{{ path('login') }}"><button class="btn-primary">Vous voulez laisser un commentaire : Connectez-vous</button></a>
+    {% endif %}
+    
+    {# Listes commenaires #}
+    {% for comment in comments %} 
+        <hr my-1>
+        <div class="container">
+            <div class="row">
+                <div class="d-flex justify-content-start">
+                    {% if comment.user.userFilename is empty %}
+                        <img src="https://eu.ui-avatars.com/api/?length=1&background=random&name={{ comment.user.username }}" max-width="80px" height="80px">
+                    {% else %}
+                        <img src="/uploads/avatarUser/{{ comment.user.userFilename }}" class="img-fluid" width="80px">
+                    {% endif %} 
+                </div>
+                <div class="d-flex align-self-end ml-1"> 
+                    <strong>{{ comment.user.username }}</strong>
+                </div>
+            </div>
+            <div class="row">
+                <i><font size="-1">posté le {{ comment.createdAt ? comment.createdAt|date('d/m/Y') : '' }}</font></i>
+            </div>         
+            <div class="row text-info">
+                {{ comment.content }} 
+            </div>
+        </div>  
+    {% endfor %}
+    
+    {# pagination commentaire #} {# https://symfony.com/doc/current/the-fast-track/fr/10-twig.html#paginating-the-comments #}
+        <hr my-1>
+        {% if previous >= 0 %}
+            <a href="{{ path('trick_show', {'safeTitle': trick.safeTitle, offset: previous}) }}"><i class="fas fa-backward shadow-sm p-3 mb-5 bg-white rounded"></i></a> 
+        {% endif %}
+        {% if next < comments|length %}
+            <a href="{{ path('trick_show', {'safeTitle': trick.safeTitle, offset: next }) }}"><i class="fas fa-forward shadow-sm p-3 mb-5 bg-white rounded"></i></a>
+        {% endif %}
+
+</div>
+  
+{% endblock %}
+
+{% block textJS %}
+<script>
+$('.carousel').carousel({
+  interval: 20000
+})
+</script>
+{% endblock %}
