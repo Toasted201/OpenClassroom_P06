@@ -39,7 +39,7 @@ class MainController extends AbstractController
         $numTrick = $_GET['numTrick'];
         $tricks = $trickRepo->findBy(['publish' => '1'], ['createdAt' => 'DESC'], 15, $numTrick);
 
-        return $this->render('main/blockTricks.html.twig', [
+        return $this->render('main/_blockTricks.html.twig', [
             'tricks' => $tricks
         ]);
     }
