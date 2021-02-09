@@ -64,7 +64,7 @@ class TrickController extends AbstractController
 
     /**
      * Affichage de la fiche d'une figure
-     * @Route("/{safeTitle}", name="trick_show", methods={"GET", "POST"})
+     * @Route("/show/{safeTitle}", name="trick_show", methods={"GET", "POST"}, requirements={"safeTitle"="[a-zA-Z0-9\-]*"} )
      */
     public function show(Request $request, TrickManagerInterface $trickManager, CommentRepository $commentRepo, Trick $trick): Response
     {
@@ -104,7 +104,7 @@ class TrickController extends AbstractController
 
     /**
      * Modification d'une figure
-     * @Route("/{safeTitle}/edit", name="trick_edit", methods={"GET","POST"})
+     * @Route("/edit/{safeTitle}", name="trick_edit", methods={"GET","POST"}, requirements={"safeTitle"="[a-zA-Z0-9\-]*"})
      */
     public function edit(Request $request, Trick $trick, TrickManagerInterface $trickManager): Response
     {
@@ -115,7 +115,7 @@ class TrickController extends AbstractController
 
         if ($trickForm->isSubmitted() && $trickForm->isValid()) {
             try {
-                $trickManager->editTrick($trickForm, $trick);
+               $trickManager->editTrick($trickForm, $trick);
             }
             catch (Exception $ex) { 
                 $this->addFlash('error',$ex->getMessage() . 'Erreur Système : veuillez ré-essayer');
@@ -133,7 +133,7 @@ class TrickController extends AbstractController
 
     /**
      * Supression d'une figure
-     * @Route("/{safeTitle}", name="trick_delete", methods={"DELETE"})
+     * @Route("/delete/{safeTitle}", name="trick_delete", methods={"DELETE"}, requirements={"safeTitle"="[a-zA-Z0-9\-]*"})
      */
     public function delete(Request $request, Trick $trick): Response
     {

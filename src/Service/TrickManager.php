@@ -25,7 +25,7 @@ class TrickManager implements TrickManagerInterface
         $trick=$form->getData();
         $trick->setCreatedAt(new DateTime());
         $trick->setUser($user);
-        $safeTitle=$this->slugger->slug($trick->getTitle());
+        $safeTitle=$this->slugger->slug($trick->getTitle())->folded();
         $trick->setSafeTitle($safeTitle);
 
         $this->entityManager->persist($trick);
@@ -54,7 +54,7 @@ class TrickManager implements TrickManagerInterface
     public function editTrick($form, $trick)
     {
         $trick=$form->getData();
-        $safeTitle=$this->slugger->slug($trick->getTitle());
+        $safeTitle=$this->slugger->slug($trick->getTitle())->folded();
         $trick->setSafeTitle($safeTitle);
 
         $this->entityManager->persist($trick);

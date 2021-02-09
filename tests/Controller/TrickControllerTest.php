@@ -10,7 +10,7 @@ class TrickControllerTest extends WebTestCase
     public function testShowTrick()
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/trick/mute');
+        $crawler = $client->request('GET', '/trick/show/mute');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertSelectorTextContains('html h5', 'Description');
@@ -24,7 +24,7 @@ class TrickControllerTest extends WebTestCase
         $testUser = $userRepository->findOneBy(['email' => 'bob@doe.com']);
         $client->loginUser($testUser);
 
-        $crawler = $client->request('GET', '/trick/mute');
+        $crawler = $client->request('GET', '/trick/show/mute');
 
         $form = $crawler->selectButton('Valider')->form();
         $form['comment_form[content]'] = 'Test Comment';
