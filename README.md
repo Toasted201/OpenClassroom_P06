@@ -71,3 +71,6 @@ Modifier les informations de connexion dans un fichier /.env.local à mettre à 
 ## Versions
 
 - **V1.0** Première version
+
+## CodeClimate
+<a href="https://codeclimate.com/github/Toasted201/OpenClassroom_P06/maintainability"><img src="https://api.codeclimate.com/v1/badges/bd1fd806ef2271ee24da/maintainability" /></a>
