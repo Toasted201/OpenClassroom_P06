@@ -1,32 +1,20 @@
-{{ form_start(formTrick) }}
+{{ form_start(trickForm) }}
 
-{{ form_widget(formTrick._token) }}
+{{ form_widget(trickForm._token) }}
 
-{{ form_row(formTrick.title, {
-    label: 'Titre'
-    }) 
-}}
+{{ form_row(trickForm.title, { label: 'Titre' }) }}
 
-{{ form_row(formTrick.description, {
-    label: 'Description'
-    }) 
-}}
+{{ form_row(trickForm.description, { label: 'Description' }) }}
 
-{{ form_row(formTrick.category, {
-    label: 'Catégorie'
-    }) 
-}}
+{{ form_row(trickForm.category, { label: 'Catégorie' }) }}
 
-{{ form_row(formTrick.publish, {
-    label: 'Publié'
-    }) 
-}}
+{{ form_row(trickForm.publish, { label: 'Publié' }) }}
 
 <hr>
 {# PHOTOS  #}
 <div class="d-flex justify-content-start mb-1">
     <div class="mr-2">
-        {{ form_label(formTrick.images, 'Images') }}
+        {{ form_label(trickForm.images, 'Images') }}
     </div>
     <button type="button"
         class="add-another-collection-widget btn-sm btn-primary mr-2"
@@ -38,13 +26,13 @@
 </div>
          
 <ul class="list-inline" id="image-list"
-    data-prototype="{{ form_widget(formTrick.images.vars.prototype)|e }}"
+    data-prototype="{{ form_widget(trickForm.images.vars.prototype)|e }}"
     data-widget-tags="{{ '<li class="list-group-item"></li>'|e }}"
-    data-widget-counter="{{ formTrick.images|length }}">
+    data-widget-counter="{{ trickForm.images|length }}">
     <div class="collapse dont-collapse-sm  text-center" id="collapseImage">
-    {% for image in formTrick.images %}    
+    {% for image in trickForm.images %}    
         {{ form_errors(image) }}
-        <li class="list-inline-item image-list-miniature"> {# le browse est masqué quand il y a une image #}
+        <li class="list-inline-item image-list-miniature"> {# le champ téléchargement est masqué quand il y a une image #}
             {% if image.vars.data is not null and image.vars.data.src is not null %}
             <img src="{{ asset(image.vars.data.src) }}" alt="" width="100" height="100">
             {% endif %}
@@ -61,7 +49,7 @@
 {# VIDEOS #}
 <div class="d-flex justify-content-start mb-1">
     <div class="mr-2">
-        {{ form_label(formTrick.videos, 'Vidéos') }}
+        {{ form_label(trickForm.videos, 'Vidéos') }}
     </div>       
     <button type="button"
         class="add-another-collection-widget btn-sm btn-primary mr-2"
@@ -73,11 +61,11 @@
 </div>
     
 <ul class="list-group px-1" id="video-list"
-    data-prototype="{{ form_widget(formTrick.videos.vars.prototype)|e }}"
+    data-prototype="{{ form_widget(trickForm.videos.vars.prototype)|e }}"
     data-widget-tags="{{ '<li class="list-group-item"></li>'|e }}"
-    data-widget-counter="{{ formTrick.videos|length }}">
+    data-widget-counter="{{ trickForm.videos|length }}">
     <div class="collapse dont-collapse-sm" id="collapseVideo">
-    {% for video in formTrick.videos %}
+    {% for video in trickForm.videos %}
         {{ form_errors(video) }}
         <li class="list-group-item">
             {{ form_widget(video) }}
@@ -95,7 +83,7 @@
 </div>
 {# BOUTON SAVE #}      
 
-{{ form_end(formTrick, { "render_rest": false }) }}
+{{ form_end(trickForm, { "render_rest": false }) }}
 
 
 {% block textJS %}

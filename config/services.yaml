@@ -38,3 +38,9 @@ services:
     App\EntityListener\:
       resource: '../src/EntityListener'
       tags: ['doctrine.orm.entity_listener']
+
+    App\Service\UserManager: ~
+    App\Service\UserManagerInterface : '@App\Service\UserManager'
+
+    App\Service\TrickManager: ~
+    App\Service\TrickManagerInterface : '@App\Service\TrickManager'

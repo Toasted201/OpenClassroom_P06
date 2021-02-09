@@ -8,34 +8,24 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class UserService
+class UserManager implements UserManagerInterface
 {
-    protected $requestStack;
-    protected $form;
-    protected $mailerInterface;
-    protected $formFactory;
-    protected $currentUser;
-    protected $tokenStorageInterface;
-    protected $passwordEncoder;
-    protected $slugger;
-    protected $router;
-    protected $container;
+    private $entityManager;
+    private $mailerInterface;
+    private $passwordEncoder;
+    private $slugger;
+    private $router;
+    private $container;
  
     public function __construct(
-        RequestStack $requestStack, 
-        TokenStorageInterface $tokenStorageInterface, 
-        FormFactoryInterface $formFactory, 
         EntityManagerInterface $entityManager, 
         MailerInterface $mailerInterface, 
         UserPasswordEncoderInterface $passwordEncoder,
@@ -44,10 +34,7 @@ class UserService
         ContainerInterface $container)
 
     {
-        $this->requestStack = $requestStack;
-        $this->tokenStorageInterface = $tokenStorageInterface;
         $this->entityManager = $entityManager;
-        $this->formFactory = $formFactory;
         $this->mailerInterface = $mailerInterface;
         $this->passwordEncoder = $passwordEncoder;
         $this->slugger = $slugger;

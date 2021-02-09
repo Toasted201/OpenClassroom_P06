@@ -41,9 +41,6 @@ security:
             # configure the form authentication as the entry point for unauthenticated users
             entry_point: form_login
 
-            # TODO configuring the maximum login attempts (per minute)
-            ##login_throttling:
-                ##max_attempts: 2
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
