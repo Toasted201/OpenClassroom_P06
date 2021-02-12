@@ -20,9 +20,8 @@ class TrickManager implements TrickManagerInterface
      * Création d'une figure
      * @throws Exception
      */
-    public function newTrick($form, $trick, $user)
+    public function newTrick($trick, $user)
     {
-        $trick=$form->getData();
         $trick->setCreatedAt(new DateTime());
         $trick->setUser($user);
         $safeTitle=$this->slugger->slug($trick->getTitle())->folded();
@@ -36,14 +35,13 @@ class TrickManager implements TrickManagerInterface
      * Création d'un commentaire
      * @throws Exception
      */
-    public function newComment($form, $trick, $user)
+    public function newComment($comment, $trick, $user)
     {
-        $comment=$form->getData();
         $comment->setTrick($trick);
         $comment->setUser($user);
         $comment->setCreatedAt(new DateTime());
         
-        $this->entityManager->persist($form->getData()).
+        $this->entityManager->persist($comment).
         $this->entityManager->flush();
     }
 
@@ -51,9 +49,8 @@ class TrickManager implements TrickManagerInterface
      * Modification d'une figure
      * @throws Exception
      */
-    public function editTrick($form, $trick)
+    public function editTrick($trick)
     {
-        $trick=$form->getData();
         $safeTitle=$this->slugger->slug($trick->getTitle())->folded();
         $trick->setSafeTitle($safeTitle);
 

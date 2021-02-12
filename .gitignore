@@ -15,3 +15,5 @@
 /phpunit.xml
 /tests/test-coverage
 ###< symfony/phpunit-bridge ###
+
+/_diagrammes

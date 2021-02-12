@@ -4,7 +4,7 @@ namespace App\Service;
 
 interface TrickManagerInterface
 {
-    public function newTrick($form, $trick, $user);
-    public function newComment($form, $trick, $user);
-    public function editTrick($form,$trick);
+    public function newTrick($trick, $user);
+    public function newComment($comment, $trick, $user);
+    public function editTrick($trick);
 }

@@ -46,7 +46,7 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {          
             try {
-                $trickManager->newTrick($form, $trick, $user);
+                $trickManager->newTrick($trick, $user);
             }
             catch (Exception $ex) { 
                 $this->addFlash('error',$ex->getMessage() . 'Erreur Système : veuillez ré-essayer');
@@ -79,7 +79,7 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid() && $user) {
             try {
-                $trickManager->newComment($form, $trick, $user);
+                $trickManager->newComment($comment, $trick, $user);
             }
             catch (Exception $ex) {
                 $this->addFlash('error',$ex->getMessage() . 'Erreur Système : veuillez ré-essayer');
@@ -115,7 +115,7 @@ class TrickController extends AbstractController
 
         if ($trickForm->isSubmitted() && $trickForm->isValid()) {
             try {
-               $trickManager->editTrick($trickForm, $trick);
+               $trickManager->editTrick($trick);
             }
             catch (Exception $ex) { 
                 $this->addFlash('error',$ex->getMessage() . 'Erreur Système : veuillez ré-essayer');
