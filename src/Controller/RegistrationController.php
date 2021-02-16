@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Form\AvatarFormType;
 use App\Form\RegistrationFormType;
 use App\Security\UserAuthenticator;
-use App\Service\UserService;
+use App\Service\UserManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +16,7 @@ use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 class RegistrationController extends AbstractController
 {
+    
     public function __construct()
     {
     }
@@ -23,15 +24,17 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserService $userService): Response
+    public function register(Request $request, UserManagerInterface $userManager): Response
     {
+
+        
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {          
             try {
-                $userService->newUser($form, $user);
+                $userManager->newUser($form, $user);
             }
             catch (Exception $ex) { 
                 $this->addFlash('error',$ex->getMessage() . 'Erreur Système : veuillez ré-essayer');
@@ -48,9 +51,10 @@ class RegistrationController extends AbstractController
     }
 
     /**
+     * Modification de la photo de profil
      * @Route("/avatar", name="app_avatar")
      */
-    public function avatar(Request $request, UserService $userService): Response
+    public function avatar(Request $request, UserManagerInterface $userManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
@@ -60,7 +64,7 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $userService->uploadAvatar($form, $user);
+                $userManager->uploadAvatar($form, $user);
             }
             catch (Exception $ex) { 
                 $this->addFlash('error',$ex->getMessage() . 'Erreur Système : veuillez ré-essayer');
@@ -80,7 +84,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/verify/email/{validationToken}", name="app_verify_email")
      */
-    public function verifyUserEmail(Request $request, UserService $userService, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator, User $user): Response
+    public function verifyUserEmail(Request $request, UserManagerInterface $userManager, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator, User $user): Response
     {
         $isVerified = $user->isVerified(); 
 
@@ -90,7 +94,7 @@ class RegistrationController extends AbstractController
         else
         {
             try {
-            $userService->emailValidation($user);
+            $userManager->emailValidation($user);
             }
             catch (Exception $ex) { 
                 $this->addFlash('error',$ex->getMessage() . 'Erreur Système : veuillez ré-essayer');
@@ -106,5 +110,5 @@ class RegistrationController extends AbstractController
         );
         $this->addFlash('success', 'Votre mail a été validé. Vous êtes connecté');
         return $this->redirectToRoute('home');
-    }    
+    }
 }

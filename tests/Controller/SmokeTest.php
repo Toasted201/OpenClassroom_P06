@@ -33,7 +33,7 @@ class SmokeTest extends WebTestCase
             'register' => ['Register', '/register'],
             'resetPassword' => ['Reset', '/reset-password'],
             'login' => ['login', '/login'],
-            'trick' => ['trickMute', '/trick/mute'],
+            'trick' => ['trickMute', '/trick/show/mute'],
         ];
     }
 }

@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
-use App\Service\UserService;
+use App\Service\UserManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,17 +23,17 @@ class ResetPasswordController extends AbstractController
     }
 
     /**
-     * Formulaire de demande et envoi de mail
+     * Formulaire d'envoi de mail pour changer le mot de passe
      * @Route("", name="app_forgot_password_request")
      */
-    public function request(Request $request, UserService $userService): Response
+    public function request(Request $request, UserManagerInterface $userManager): Response
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);      
         
         if ($form->isSubmitted() && $form->isValid()) {      
             try {
-                $userService->emailResetPassword($form);
+                $userManager->emailResetPassword($form);
             }
             catch (Exception $ex) { 
                 $this->addFlash('error',$ex->getMessage() . 'Si un compte est associé à ce mail, un email de ré-initialisation vous a été envoyé');
@@ -50,13 +50,13 @@ class ResetPasswordController extends AbstractController
     }
 
     /**
-     * Formulaire de modification de mot de passe
+     * Formulaire de modification du mot de passe
      * @Route("/reset/{resetToken}", name="app_reset_password")
      */
-    public function reset(Request $request, User $user, UserService $userService): Response
+    public function reset(Request $request, User $user, UserManagerInterface $userManager): Response
     {       
         try {
-            $userService->isTokenPerempted($user);
+            $userManager->isTokenPerempted($user);
         }
         catch (Exception $ex) {
             $this->addFlash('error','Le lien de réinitalisation a expiré. Vous devez refaire une demande');
@@ -68,7 +68,7 @@ class ResetPasswordController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {   
             try {
-                $userService->newPassword($form, $user);
+                $userManager->newPassword($form, $user);
             }
             catch (Exception $ex) {
                 $this->addFlash('error',$ex->getMessage());
