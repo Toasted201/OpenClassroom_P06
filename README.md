@@ -71,3 +71,5 @@ Modifier les informations de connexion dans un fichier /.env.local à mettre à 
 ## Versions
 
 - **V1.0** Première version
+- **V1.1** Refactoring
+- **V1.2** Modification texte message d’erreur
